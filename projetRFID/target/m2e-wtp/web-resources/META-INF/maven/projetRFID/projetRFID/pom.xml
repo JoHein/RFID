@@ -4,6 +4,7 @@
 
 	<groupId>projetRFID</groupId>
 	<version>1.0.1-SNAPSHOT</version>
+	<artifactId>projetRFID</artifactId>
 
 	<name>projetRFID</name>
 	<url>http://maven.apache.org</url>
@@ -70,6 +71,28 @@
 
 	</dependencies>
 
+	<dependency>
+
+			<groupId>javax.xml.bind</groupId>
+
+			<artifactId>jaxb-api</artifactId>
+
+			<version>2.1</version>
+
+		</dependency>
+		
+		<dependency>
+
+			<groupId>com.sun.jersey</groupId>
+
+			<artifactId>jersey-json</artifactId>
+
+			<version>1.19</version>
+
+		</dependency>
+	
+
+
 	<build>
 
 		<plugins>
@@ -103,5 +126,4 @@
 	</build>
 
 	<packaging>war</packaging>
-	<artifactId>projetRFID</artifactId>
 </project>
