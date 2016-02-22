@@ -6,7 +6,6 @@ public class user {
     String nomUser;
     String uidUser;
 
-
     public user() {
     }
 
@@ -14,7 +13,6 @@ public class user {
         this.idUser = idUser;
         this.nomUser = nomUser;
         this.uidProduits = uidUser;
-
     }
 
     public String toString() {

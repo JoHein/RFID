@@ -30,7 +30,7 @@ public class database {
     }
 
     public produit getProduit(String uid) throws SQLException {
-        ResultSet stock = this.stmt.executeQuery("SELECT * from STOCK where uidProduit = '" + uid + "'");
+        ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
 
         produit prod = new produit();
 
@@ -42,12 +42,26 @@ public class database {
 
         }
 
-        ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM CATALOGUE where idCatalogue = '" + prod.idCatalogue + "'");
+        ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue = '" + prod.idCatalogue + "'");
         while (catalogue.next()) {
             prod.nomCatalogue = catalogue.getString("nomCatalogue");
 
         }
         return prod;
+    }
+
+    public produit getProduit(String uid) throws SQLException {
+        ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
+
+        user user = new produit();
+
+        while (users.next()) {
+            user.idUser = users.getInt("idStock");
+            user.nomUser = users.getString("nomUser");
+            user.uidUser = users.getString("uidUser")
+
+        }
+        return user;
     }
 
     public void closeConnection() throws SQLException {
