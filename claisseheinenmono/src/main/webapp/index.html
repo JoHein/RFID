@@ -1,5 +1,25 @@
-<html>
+<html data-ng-app="moteurapp">
+<head>
+    <title></title>
+    <script src="WEB-INF/lib/angular.min.js"></script>
+    <script src="WEB-INF/lib/angular-resource.min.js"></script>
+    <script src="WEB-INF/lib/ui-bootstrap-tpls.min.js"></script>
+    <script src="WEB-INF/lib/ng-grid-2.0.11.min.js"></script>
+ 
+    <script src="angular/moteurapp.js"></script>
+ 
+    <link rel="stylesheet" type="text/css" href="WEB-INF/lib/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="WEB-INF/lib/css/ng-grid.min.css"/>
+</head>
+ 
 <body>
-<h2>Hello World!</h2>
+ 
+<br>
+ 
+<p>HELLO</p>
+<div data-ng-controller="LivreController">
+<p>{{livre.nomCatalogue}}</p>
+</div>
+ 
 </body>
 </html>

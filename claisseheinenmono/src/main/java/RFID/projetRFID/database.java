@@ -38,12 +38,13 @@ public class database {
 			prod.idStock = stock.getInt("idStock");
 			prod.uidProduits = stock.getString("uidProduit");
 			prod.dispo = stock.getInt("dispo");
+			prod.idCatalogue = stock.getInt("idCatalogue");
+
 		}
 
-		ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM CATALOGUE where idCatalogue = '" + prod.idStock + "'");
+		ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM CATALOGUE where idCatalogue = '" + prod.idCatalogue + "'");
 		while (catalogue.next()) {
 			prod.nomCatalogue = catalogue.getString("nomCatalogue");
-			prod.idCatalogue = catalogue.getInt("idCatalogue");
 
 		}
 		return prod;
