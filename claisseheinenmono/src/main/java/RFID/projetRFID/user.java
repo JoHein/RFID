@@ -1,15 +1,16 @@
 package RFID.projetRFID;
 
-public class user {
+public class User {
 
     int idUser;
     String nomUser;
     String uidUser;
+	String uidProduits;
 
-    public user() {
+    public User() {
     }
 
-    public user(int idUser, String nomUser, String uidUser) {
+    public User(int idUser, String nomUser, String uidProduits) {
         this.idUser = idUser;
         this.nomUser = nomUser;
         this.uidProduits = uidUser;
@@ -18,8 +19,9 @@ public class user {
     public String toString() {
         String json = "{\"idUser\" : " + this.idUser +
                 ",\"nomUser\":\"" + this.nomUser +
-                ",\"uidUser\":\"" + this.uidUser +
-        return json;
+                ",\"uidProduits\":\"" + this.uidProduits ;
+    
+		return json;
     }
 
     public String getUidUser() {

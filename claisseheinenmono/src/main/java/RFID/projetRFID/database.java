@@ -6,12 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class database {
+public class Database {
 
     Statement stmt;
     Connection con;
 
-    public database() {
+    public Database() {
     }
 
     public void prepareToQuery() throws SQLException {
@@ -28,11 +28,11 @@ public class database {
 
         this.stmt = con.createStatement();
     }
-
-    public produit getProduit(String uid) throws SQLException {
+    
+    public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
 
-        produit prod = new produit();
+        Produit prod = new Produit();
 
         while (stock.next()) {
             prod.idStock = stock.getInt("idStock");
@@ -50,15 +50,15 @@ public class database {
         return prod;
     }
 
-    public produit getProduit(String uid) throws SQLException {
+    public User getProduitUser(String uid) throws SQLException {
         ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
 
-        user user = new produit();
+        User user = new User();
 
         while (users.next()) {
             user.idUser = users.getInt("idStock");
             user.nomUser = users.getString("nomUser");
-            user.uidUser = users.getString("uidUser")
+            user.uidUser = users.getString("uidUser");
 
         }
         return user;

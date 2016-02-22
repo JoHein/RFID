@@ -12,14 +12,14 @@ import javax.smartcardio.*;
 /**
  * Application launch
  */
-public class lecteur {
+public class Lecteur {
     private static Card card = null;
     private static CardChannel channel = null;
     private static CardTerminal terminal;
+    static Database db = new Database();
 
     public Object openConnection() throws CardException, SQLException {
 
-        database db = new database();
 
         while (true) {
             TerminalFactory factory = TerminalFactory.getDefault();
@@ -75,7 +75,7 @@ public class lecteur {
         }
     }
 
-    public static void waitForCard() {
+    public static void waitForCard() throws CardException {
         if (terminal.waitForCardPresent(10000) && terminal.isCardPresent()) {
             try {
                 affichage();
@@ -107,15 +107,15 @@ public class lecteur {
         }
     }
 
-    public static produit productCardProcess(String uid) {
+    public static Produit productCardProcess(String uid) throws SQLException {
         db.prepareToQuery();
-        produit prod = db.getProduit(uid);
+        Produit prod = db.getProduitStock(uid);
         return prod;
     }
 
-    public static produit userCardProcess(String uid) {
+    public static User userCardProcess(String uid) throws SQLException {
         db.prepareToQuery();
-        user utilisateur = db.getUser(uid);
-        return user;
+        User utilisateur = db.getProduitUser(uid);
+        return utilisateur;
     }
 }

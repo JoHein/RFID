@@ -19,8 +19,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import RFID.projetRFID.lecteur;
-import RFID.projetRFID.produit;
+import RFID.projetRFID.Lecteur;
+import RFID.projetRFID.Produit;
 
 @Path("/")
 public class webservice {
@@ -29,10 +29,10 @@ public class webservice {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String connectReader() throws JSONException, CardException, SQLException {
-		lecteur lect = new lecteur();
+		Lecteur lect = new Lecteur();
 		System.out.println("connectReader");
 
-		produit prod = lect.openConnection();
+		Object prod = lect.openConnection();
 		System.out.println("produit :" + prod.toString());
 		String json = prod.toString();
 		return json;

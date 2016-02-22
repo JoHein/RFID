@@ -1,6 +1,6 @@
 package RFID.projetRFID;
 
-public class produit {
+public class Produit {
 
     int idStock;
     String uidProduits;
@@ -8,10 +8,10 @@ public class produit {
     String nomCatalogue;
     int dispo;
 
-    public produit() {
+    public Produit() {
     }
 
-    public produit(int idStock, String uidProduits, int idCatalogue, String nomCatalogue, int dispo) {
+    public Produit(int idStock, String uidProduits, int idCatalogue, String nomCatalogue, int dispo) {
         this.idStock = idStock;
         this.uidProduits = uidProduits;
         this.idCatalogue = idCatalogue;
