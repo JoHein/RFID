@@ -17,7 +17,7 @@ public class lecteur {
     private static CardChannel channel = null;
     private static CardTerminal terminal;
 
-    public produit openConnection() throws CardException, SQLException {
+    public Object openConnection() throws CardException, SQLException {
 
         database db = new database();
 
@@ -32,31 +32,8 @@ public class lecteur {
                 e.printStackTrace();
             }
             System.out.println("Presenter carte !");
-            if (terminal.waitForCardPresent(10000) && terminal.isCardPresent()) {
-                try {
-                    affichage();
-                    String uid = getCardData();
-
-
-                    db.prepareToQuery();
-                    produit prod = db.getProduit(uid);
-                    System.out.println(prod.toString());
-                    return prod;
-                } catch (CardException e) {
-                    System.err.println(e);
-                }
-
-                try {
-                    card.disconnect(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                while (!terminal.waitForCardAbsent(10000)) {
-                    System.out.println("retirer carte");
-                }
-            }
+            waitForCard();
         }
-
     }
 
     public static void affichage() throws CardException {
@@ -65,7 +42,6 @@ public class lecteur {
         System.out.println("Card: " + card);
         channel = card.getBasicChannel();
         System.out.println("Channel: " + channel);
-
         System.out.println("Connection open!");
         ATR atr = card.getATR();
         byte[] baAtr = atr.getBytes();
@@ -97,5 +73,49 @@ public class lecteur {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void waitForCard() {
+        if (terminal.waitForCardPresent(10000) && terminal.isCardPresent()) {
+            try {
+                affichage();
+                String uid = getCardData();
+                if (uid.length() == 14) {
+                    System.out.println("Carte produit détectée");
+                    // traitement carte produit
+                } else if (uid.length() == 8) {
+                    System.out.println("Carte utilisateur détectée");
+                    // traitement carte user
+                } else {
+                    System.out.println("Merci de passer une carte valide");
+                }
+
+                //System.out.println(prod.toString());
+                //return prod;
+            } catch (CardException e) {
+                System.err.println(e);
+            }
+
+            try {
+                card.disconnect(true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            while (!terminal.waitForCardAbsent(10000)) {
+                System.out.println("retirer carte");
+            }
+        }
+    }
+
+    public static produit productCardProcess(String uid) {
+        db.prepareToQuery();
+        produit prod = db.getProduit(uid);
+        return prod;
+    }
+
+    public static produit userCardProcess(String uid) {
+        db.prepareToQuery();
+        user utilisateur = db.getUser(uid);
+        return user;
     }
 }
