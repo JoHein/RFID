@@ -75,7 +75,7 @@ public class Lecteur {
         }
     }
 
-    public static void waitForCard() throws CardException {
+    public static Object waitForCard() throws CardException {
         if (terminal.waitForCardPresent(10000) && terminal.isCardPresent()) {
             try {
                 affichage();
@@ -83,9 +83,14 @@ public class Lecteur {
                 if (uid.length() == 14) {
                     System.out.println("Carte produit détectée");
                     // traitement carte produit
+                    Database base = new Database();
+                    Produit produit = base.getProduitStock(uid);
+                    return produit;
                 } else if (uid.length() == 8) {
                     System.out.println("Carte utilisateur détectée");
-                    // traitement carte user
+                    Database base = new Database();
+                    User user = base.getProduitUser(uid);
+                    return user;
                 } else {
                     System.out.println("Merci de passer une carte valide");
                 }
