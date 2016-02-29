@@ -75,7 +75,7 @@ public class Lecteur {
         }
     }
 
-    public static Object waitForCard() throws CardException {
+    public static Object waitForCard() throws CardException, SQLException {
         if (terminal.waitForCardPresent(10000) && terminal.isCardPresent()) {
             try {
                 affichage();
@@ -94,7 +94,6 @@ public class Lecteur {
                 } else {
                     System.out.println("Merci de passer une carte valide");
                 }
-
                 //System.out.println(prod.toString());
                 //return prod;
             } catch (CardException e) {
@@ -110,6 +109,7 @@ public class Lecteur {
                 System.out.println("retirer carte");
             }
         }
+		return card;
     }
 
     public static Produit productCardProcess(String uid) throws SQLException {
