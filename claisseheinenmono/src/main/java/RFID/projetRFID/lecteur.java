@@ -80,13 +80,13 @@ public class Lecteur {
             try {
                 affichage();
                 String uid = getCardData();
-                if (uid.length() == 14) {
+                if (uid.length() == 8) {
                     System.out.println("Carte produit détectée");
                     // traitement carte produit
                     Database base = new Database();
                     Produit produit = base.getProduitStock(uid);
                     return produit;
-                } else if (uid.length() == 8) {
+                } else if (uid.length() == 14) {
                     System.out.println("Carte utilisateur détectée");
                     Database base = new Database();
                     User user = base.getProduitUser(uid);
