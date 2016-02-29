@@ -87,7 +87,7 @@ public class Lecteur {
                     Produit produit = base.getProduitStock(uid);
                     return produit;
                 } else if (uid.length() == 14) {
-                    System.out.println("Carte utilisateur détectée");
+                    System.out.println("Carte user détectée");
                     Database base = new Database();
                     User user = base.getProduitUser(uid);
                     return user;
