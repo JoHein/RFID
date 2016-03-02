@@ -86,14 +86,14 @@ public class Lecteur {
                     Database base = new Database();
                     base.prepareToQuery();
                     Produit produit = base.getProduitStock(uid);
-                    System.out.println(produit.toString);
+                    System.out.println(produit.toString());
                     return produit.toString();
                 } else if (uid.length() == 14) {
                     System.out.println("Carte user détectée");
                     Database base = new Database();
                     base.prepareToQuery();
                     User user = base.getProduitUser(uid);
-                    System.out.println(user.toString);
+                    System.out.println(user.toString());
                     return user.toString();
                 } else {
                     System.out.println("Merci de passer une carte valide");
