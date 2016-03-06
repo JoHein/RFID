@@ -1,20 +1,14 @@
 'use strict';
 
 angular.module('RFID')
-    .service('ReadLivre', function (localStorageService, $http, $q) {
+    .service('ReadLivre', function ($http) {
         return {
             readCard: function () {
-                var deferred = $q.defer();
-                // TODO voir la route pour le register et la méthode
-                $http.get('/rest/ReadCard/', {})
+                $http.get('/rest/readCard')
                     .then(function (response) {
                         console.log(response);
-                        deferred.resolve(response);
-                    }, function (error) {
-                        console.log(error);
-                        deferred.reject(error);
+                        return response;
                     });
-                return deferred.promise;
             }
         };
     });

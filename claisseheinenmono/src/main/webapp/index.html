@@ -1,25 +1,25 @@
-<html data-ng-app="moteurapp">
+<html>
 <head>
     <title></title>
-    <script src="WEB-INF/lib/angular.min.js"></script>
-    <script src="WEB-INF/lib/angular-resource.min.js"></script>
-    <script src="WEB-INF/lib/ui-bootstrap-tpls.min.js"></script>
-    <script src="WEB-INF/lib/ng-grid-2.0.11.min.js"></script>
+    <script src="bower/node_modules/angular/angular.min.js"></script>
+    <script src="bower/node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    
  
-    <script src="angular/moteurapp.js"></script>
+    <script src="jsfrontend/moteurapp.js"></script>
+    <script src="jsfrontend/controller/LivreController.js"></script>
+    <script src="jsfrontend/controller/menuPrincipalController.js"></script>
+    <script src="jsfrontend/services/LivreInfoService.js"></script>
+    
  
-    <link rel="stylesheet" type="text/css" href="WEB-INF/lib/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="WEB-INF/lib/css/ng-grid.min.css"/>
+
 </head>
  
-<body>
+<body ng-app="RFID">
  
 <br>
- 
 <p>HELLO</p>
-<div data-ng-controller="LivreController">
-<p>{{livre.nomCatalogue}}</p>
-</div>
+
+ <div ui-view=""></div>
  
 </body>
 </html>
