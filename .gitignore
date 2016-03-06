@@ -1,6 +1,9 @@
 # IntelliJ IDEA folder
 .idea/
 
+# Target folder
+claisseheinenmono/target
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
