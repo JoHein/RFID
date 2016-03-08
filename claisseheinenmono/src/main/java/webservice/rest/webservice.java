@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import javax.smartcardio.CardException;
 import javax.ws.rs.Consumes;
@@ -19,6 +20,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import RFID.projetRFID.Catalogue;
+import RFID.projetRFID.Database;
 import RFID.projetRFID.Lecteur;
 import RFID.projetRFID.Produit;
 
@@ -36,5 +39,15 @@ public class webservice {
 		System.out.println("produit :" + prod.toString());
 		String json = prod.toString();
 		return json;
+	}
+	
+	@Path("/allCat")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Catalogue> allCatalogue() throws JSONException, SQLException {
+		Database data = new Database();
+		
+		data.prepareToQuery();
+		return data.getAllCatalogues();
 	}
 }

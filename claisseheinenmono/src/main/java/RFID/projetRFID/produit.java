@@ -20,11 +20,11 @@ public class Produit {
     }
 
     public String toString() {
-        String json = "{\"idStock\" : " + this.idStock +
+        String json = "[{\"idStock\" : " + this.idStock +
                 ",\"uidProduit\":\"" + this.uidProduits +
                 "\",\"idCatalogue\":" + this.idCatalogue +
                 ",\"nomCatalogue\":\"" + this.nomCatalogue +
-                "\",\"dispo\":" + this.dispo + "}";
+                "\",\"dispo\":" + this.dispo + "}]";
         return json;
     }
 

@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
 
@@ -27,6 +29,21 @@ public class Database {
         this.con = DriverManager.getConnection(url, "root", "");
 
         this.stmt = con.createStatement();
+    }
+    
+    public List<Catalogue> getAllCatalogues() throws SQLException{
+        ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
+        
+        List<Catalogue> listCat = new ArrayList<Catalogue>();
+        
+        while (allCat.next()){
+            Catalogue catalogue = new Catalogue();
+        	catalogue.idCatalogue=allCat.getInt("idCatalogue");
+        	catalogue.nomCatalogue=allCat.getString("nomCatalogue");
+        	catalogue.nbDispo=allCat.getInt("nbDispo");
+        	listCat.add(catalogue);
+        }
+        return listCat;
     }
     
     public Produit getProduitStock(String uid) throws SQLException {

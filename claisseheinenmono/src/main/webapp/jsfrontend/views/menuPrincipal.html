@@ -1,5 +1,16 @@
 <br>
 
 <div>
+<h1>Liste des oeuvres</h1>
+<table>
+	<th>Titre de l'oeuvre</th>
+	<th>Nombre disponible</th>
+	<tr data-ng-repeat="data in menuController.oeuvre">
+	<td>{{data.nomCatalogue}}</td>
+	<td>{{data.nbDispo}}</td>
+	</tr>
+</table>
+</div>
+
 <button data-ng-click="scanBook()">Scanner Livre</button>
 </div>
