@@ -8,6 +8,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 public class Database {
 
     Statement stmt;
@@ -31,19 +35,28 @@ public class Database {
         this.stmt = con.createStatement();
     }
     
-    public List<Catalogue> getAllCatalogues() throws SQLException{
+    
+    public JSONObject getAllCatalogues() throws SQLException, JSONException{
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
         
-        List<Catalogue> listCat = new ArrayList<Catalogue>();
+        JSONArray listCat = new JSONArray();    
+        JSONObject resList = new JSONObject();
         
+
         while (allCat.next()){
-            Catalogue catalogue = new Catalogue();
-        	catalogue.idCatalogue=allCat.getInt("idCatalogue");
-        	catalogue.nomCatalogue=allCat.getString("nomCatalogue");
-        	catalogue.nbDispo=allCat.getInt("nbDispo");
-        	listCat.add(catalogue);
+        	JSONObject obj = new JSONObject();
+        	obj.put("idCatalqogue", allCat.getInt("idCatalogue"));
+        	obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
+        	obj.put("nbDispo", allCat.getInt("nbDispo"));
+        	listCat.put(obj);
         }
-        return listCat;
+        
+        System.out.println("Database");
+        System.out.println(listCat);
+        
+        resList.put("Livres",listCat);
+         
+        return resList;
     }
     
     public Produit getProduitStock(String uid) throws SQLException {
@@ -73,7 +86,7 @@ public class Database {
         User user = new User();
 
         while (users.next()) {
-            user.idUser = users.getInt("idStock");
+            user.idUser = users.getInt("idUser");
             user.nomUser = users.getString("nomUser");
             user.uidUser = users.getString("uidUser");
 

@@ -5,21 +5,20 @@ public class User {
     int idUser;
     String nomUser;
     String uidUser;
-	String uidProduits;
 
     public User() {
     }
 
-    public User(int idUser, String nomUser, String uidProduits) {
+    public User(int idUser, String nomUser, String uidUser) {
         this.idUser = idUser;
         this.nomUser = nomUser;
-        this.uidProduits = uidUser;
+        this.uidUser = uidUser;
     }
 
     public String toString() {
-        String json = "{\"idUser\" : " + this.idUser +
+        String json = "[{\"idUser\" : " + this.idUser +
                 ",\"nomUser\":\"" + this.nomUser +
-                ",\"uidProduits\":\"" + this.uidProduits ;
+                ",\"uidUser\":\"" + this.uidUser + "\"}]";;
     
 		return json;
     }

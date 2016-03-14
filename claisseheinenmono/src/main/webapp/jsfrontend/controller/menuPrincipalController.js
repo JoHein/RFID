@@ -9,9 +9,13 @@ angular.module('RFID')
     			 $http.get('/rest/allCat')
 		          .then(function (data) {
 		              $log.debug(data);
+		              vm.oeuvre= data.data.Livres;
+		              $log.debug(data.data.Livres);
+
+		              
 		              $log.debug("la reponse");
-		              vm.oeuvre= data.data;
-		              $log.debug(vm.oeuvre);
+
+		              $log.debug(vm.oeuvre[0].nomCatalogue);
 		          });
    			 
     			 $scope.scanBook = function() {

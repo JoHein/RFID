@@ -44,10 +44,13 @@ public class webservice {
 	@Path("/allCat")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Catalogue> allCatalogue() throws JSONException, SQLException {
+	public JSONObject allCatalogue() throws JSONException, SQLException {
 		Database data = new Database();
-		
+		System.out.println("Prepare");
+
 		data.prepareToQuery();
+
 		return data.getAllCatalogues();
+		
 	}
 }
