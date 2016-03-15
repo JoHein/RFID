@@ -73,7 +73,7 @@ public class Database {
         }
         return prod;
     }
-a
+
     public User getProduitUser(String uid) throws SQLException {
         ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
 
