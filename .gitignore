@@ -2,7 +2,7 @@
 .idea/
 
 # Target folder
-claisseheinenmono/target
+claisseheinenmono/target/
 
 # Windows image file caches
 Thumbs.db
