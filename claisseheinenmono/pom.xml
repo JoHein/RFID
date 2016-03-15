@@ -1,116 +1,116 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>claisseheinenmono</groupId>
-	<artifactId>RFID</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+    <groupId>claisseheinenmono</groupId>
+    <artifactId>RFID</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
 
-	<name>claisseheinenmono</name>
-	<url>http://maven.apache.org</url>
+    <name>claisseheinenmono</name>
+    <url>http://maven.apache.org</url>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
 
 
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.9.5</version>
-		</dependency>
-		
-		<dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+        </dependency>
 
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>jsr311-api</artifactId>
-			<version>1.1.1</version>
+        <dependency>
 
-		</dependency>
-		
-		<dependency>
-	<groupId>javax.servlet</groupId>
-	<artifactId>javax.servlet-api</artifactId>
-	<version>3.1.0</version>
-</dependency>
-		<dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
 
-			<groupId>com.sun.jersey</groupId>
+        </dependency>
 
-			<artifactId>jersey-servlet</artifactId>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
 
-			<version>1.19</version>
+            <groupId>com.sun.jersey</groupId>
 
-		</dependency>
+            <artifactId>jersey-servlet</artifactId>
 
-		<dependency>
+            <version>1.19</version>
 
-			<groupId>javax.xml.bind</groupId>
+        </dependency>
 
-			<artifactId>jaxb-api</artifactId>
+        <dependency>
 
-			<version>2.1</version>
+            <groupId>javax.xml.bind</groupId>
 
-		</dependency>
-		
-		
-		<dependency>
+            <artifactId>jaxb-api</artifactId>
 
-			<groupId>com.sun.jersey</groupId>
+            <version>2.1</version>
 
-			<artifactId>jersey-json</artifactId>
+        </dependency>
 
-			<version>1.19</version>
 
-		</dependency>
+        <dependency>
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.38</version>
-		</dependency>
-	</dependencies>
+            <groupId>com.sun.jersey</groupId>
 
-	<build>
+            <artifactId>jersey-json</artifactId>
 
-		<plugins>
+            <version>1.19</version>
 
-			<plugin>
+        </dependency>
 
-				<groupId>org.mortbay.jetty</groupId>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.38</version>
+        </dependency>
+    </dependencies>
 
-				<artifactId>jetty-maven-plugin</artifactId>
+    <build>
 
-				<version>8.1.10.v20130312</version>
+        <plugins>
 
-				<configuration>
+            <plugin>
 
-					<scanIntervalSeconds>10</scanIntervalSeconds>
+                <groupId>org.mortbay.jetty</groupId>
 
-					<webApp>
+                <artifactId>jetty-maven-plugin</artifactId>
 
-						<contextPath>/</contextPath>
+                <version>8.1.10.v20130312</version>
 
-						<descriptor>${project.basedir}/resources/web.xml</descriptor>
+                <configuration>
 
-					</webApp>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
 
-				</configuration>
+                    <webApp>
 
-			</plugin>
+                        <contextPath>/</contextPath>
 
-		</plugins>
+                        <descriptor>${project.basedir}/resources/web.xml</descriptor>
 
-	</build>
+                    </webApp>
+
+                </configuration>
+
+            </plugin>
+
+        </plugins>
+
+    </build>
 
 </project>

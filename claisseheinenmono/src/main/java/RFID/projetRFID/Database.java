@@ -24,18 +24,16 @@ public class Database {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-
             e.printStackTrace();
         }
 
-        String url = "jdbc:mysql://localhost:3307/rfid";
-       // String url = "jdbc:mysql://localhost:3306/rfid";
+        //String url = "jdbc:mysql://localhost:3307/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
         this.stmt = con.createStatement();
     }
-    
-    
+
     public JSONObject getAllCatalogues() throws SQLException, JSONException{
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
         JSONArray listCat = new JSONArray();
@@ -76,7 +74,6 @@ public class Database {
 
     public User getProduitUser(String uid) throws SQLException {
         ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
-
         User user = new User();
 
         while (users.next()) {
@@ -85,6 +82,10 @@ public class Database {
             user.uidUser = users.getString("uidUser");
         }
         return user;
+    }
+
+    public void deleteEntity(String uid) throws SQLException{
+
     }
 
     public void closeConnection() throws SQLException {
