@@ -28,20 +28,16 @@ public class Database {
             e.printStackTrace();
         }
 
-        String url = "jdbc:mysql://localhost:3307/rfid";
-
+        String url = "jdbc:mysql://localhost:3306/rfid";
         this.con = DriverManager.getConnection(url, "root", "");
-
         this.stmt = con.createStatement();
     }
     
     
     public JSONObject getAllCatalogues() throws SQLException, JSONException{
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
-        
-        JSONArray listCat = new JSONArray();    
+        JSONArray listCat = new JSONArray();
         JSONObject resList = new JSONObject();
-        
 
         while (allCat.next()){
         	JSONObject obj = new JSONObject();
@@ -50,12 +46,9 @@ public class Database {
         	obj.put("nbDispo", allCat.getInt("nbDispo"));
         	listCat.put(obj);
         }
-        
         System.out.println("Database");
         System.out.println(listCat);
-        
         resList.put("Livres",listCat);
-         
         return resList;
     }
     
@@ -75,7 +68,6 @@ public class Database {
         ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue = '" + prod.idCatalogue + "'");
         while (catalogue.next()) {
             prod.nomCatalogue = catalogue.getString("nomCatalogue");
-
         }
         return prod;
     }
@@ -89,7 +81,6 @@ public class Database {
             user.idUser = users.getInt("idUser");
             user.nomUser = users.getString("nomUser");
             user.uidUser = users.getString("uidUser");
-
         }
         return user;
     }

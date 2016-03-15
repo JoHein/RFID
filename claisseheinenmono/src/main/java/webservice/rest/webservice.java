@@ -34,7 +34,6 @@ public class webservice {
 	public String connectReader() throws JSONException, CardException, SQLException {
 		Lecteur lect = new Lecteur();
 		System.out.println("connectReader");
-
 		Object prod = lect.openConnection();
 		System.out.println("produit :" + prod.toString());
 		String json = prod.toString();
