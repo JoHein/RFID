@@ -28,7 +28,9 @@ public class Database {
             e.printStackTrace();
         }
 
-        String url = "jdbc:mysql://localhost:3306/rfid";
+        String url = "jdbc:mysql://localhost:3307/rfid";
+       // String url = "jdbc:mysql://localhost:3306/rfid";
+
         this.con = DriverManager.getConnection(url, "root", "");
         this.stmt = con.createStatement();
     }

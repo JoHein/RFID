@@ -22,8 +22,9 @@ angular.module('RFID')
     				 $log.debug("function scan");
     				 $http.get('/rest/readCard')
     		          .then(function (response) {
+    		              $log.debug("la reponse readcard");
     		              $log.debug(response);
-    		              $log.debug("la reponse");
+
     		              return response;
     		          });
     			 };
