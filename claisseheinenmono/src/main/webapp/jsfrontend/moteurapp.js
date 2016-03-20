@@ -17,5 +17,5 @@ angular
                  controllerAs: 'menuController'
             });
         
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/menu');
     });
