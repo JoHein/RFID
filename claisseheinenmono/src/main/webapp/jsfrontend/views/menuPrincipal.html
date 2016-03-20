@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Page principale</title>
 </head>
 <body>
 <br>
@@ -31,11 +31,14 @@
 
 <button class="btn" data-ng-click="scanBook()">Scanner Livre</button>
 <div>
-<p>Uidproduit: {{menuController.readCardInfo[0].uidProduit}}</p>
-<p>ID catalogue: {{menuController.readCardInfo[0].idCatalogue}}</p>
-<p>Nom catalogue: {{menuController.readCardInfo[0].nomCatalogue}}</p>
-<p>Disponibilité: {{menuController.readCardInfo[0].dispo}}</p>
-
+<table>
+<tbody>
+<tr>Uidproduit: {{menuController.readCardInfo[0].uidProduit}}</tr>
+<tr>ID catalogue: {{menuController.readCardInfo[0].idCatalogue}}</tr>
+<tr>Nom catalogue: {{menuController.readCardInfo[0].nomCatalogue}}</tr>
+<tr>Disponibilité: {{menuController.readCardInfo[0].dispo}}</tr>
+</tbody>
+</table>
 </div>
 
 </body>
