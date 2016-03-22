@@ -117,7 +117,7 @@ public class Database {
             while (produits.next()) {
                 idCatalogue = produits.getInt("idCatalogue");
             }
-            ResultSet catalogues = this.stmt.executeQuery("SELECT * FROM catalogue WHERE IdCatalogue = '" + idCatalogue + "'");
+            ResultSet catalogues = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
             while (catalogues.next()) {
                 nbTotal = catalogues.getInt("nbTotal");
                 nbDispo = catalogues.getInt("nbDispo");
@@ -127,8 +127,8 @@ public class Database {
                 nbDispo--;
             }
             String nbDispoS = ", nbdispo = " + nbDispo;
-            this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE IdCatalogue = '" + idCatalogue + "'");
-            this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '"+uid+"'");
+            this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCatalogue = '" + idCatalogue + "'");
+            this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
             return "Delete OK";
         }
         return "Delete NOK";

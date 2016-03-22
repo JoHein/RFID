@@ -31,7 +31,7 @@ import RFID.projetRFID.Produit;
 public class webservice {
 
 	/*
-     * Permet de lire et de retourner les données d'une carte
+     * Permet de lire et de retourner l'uid d'une carte
 	 */
 
     @Path("/readCard")
@@ -47,9 +47,9 @@ public class webservice {
         String data = db.getCardData(uid);
         return data;
     }
-	
+
 	/*
-	 * Lister les livres de la bibliotheque
+     * Lister les livres de la bibliotheque
 	 * 
 	 */
 
@@ -61,12 +61,12 @@ public class webservice {
         data.prepareToQuery();
         return data.getAllCatalogues();
     }
-	
+
 	/*
 	 * Ajout d'une Entity dans la bdd
 	 */
 
-    @Path("/addEnt")
+    @Path("/addEnt/{entity}/{data}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void addEntDB() throws JSONException {
@@ -86,7 +86,7 @@ public class webservice {
 //			 */
 //		}
     }
-	
+
 	/*
 	 * Supression d'une Entity de la base de donnée
 	 */
@@ -94,7 +94,6 @@ public class webservice {
     @Path("/deleteEnt/{uid}")
     @DELETE
     public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
-        System.out.println ("uid passé :"+uid);
         Database db = new Database();
         db.prepareToQuery();
         return db.deleteEntity(uid);
@@ -120,5 +119,4 @@ public class webservice {
     public void retourLivre() throws JSONException {
 
     }
-
 }
