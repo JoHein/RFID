@@ -33,14 +33,12 @@ public class Database {
         this.stmt = con.createStatement();
     }
 
-    public Object getCardData(String uid) throws SQLException {
+    public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {
             System.out.println("Carte produit détectée");
             // traitement carte produit
-            Database base = new Database();
-            base.prepareToQuery();
-            Produit produit = base.getProduitStock(uid);
+            Produit produit = this.getProduitStock(uid);
             System.out.println(produit.toString());
             data = produit.toString();
             return data;
@@ -78,9 +76,7 @@ public class Database {
 
     public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
-
         Produit prod = new Produit();
-
         while (stock.next()) {
             prod.idStock = stock.getInt("idStock");
             prod.uidProduits = stock.getString("uidProduit");
@@ -103,6 +99,7 @@ public class Database {
         while (users.next()) {
             user.idUser = users.getInt("idUser");
             user.nomUser = users.getString("nomUser");
+            user.prenomUser = users.getString("prenomUser");
             user.uidUser = users.getString("uidUser");
         }
         return user;
@@ -113,15 +110,13 @@ public class Database {
         int nbTotal = 0;
         int nbDispo = 0;
         if (uid.length() == 14) {
-            this.stmt.executeQuery("DELETE FROM users WHERE uidUser = '" + uid + "'");
+            this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
             return "Delete OK";
         } else if (uid.length() == 8) {
-
             ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
             while (produits.next()) {
                 idCatalogue = produits.getInt("idCatalogue");
             }
-            //this.stmt.executeQuery("DELETE FROM catalogue WHERE uidUser = '" + uid + "'");
             ResultSet catalogues = this.stmt.executeQuery("SELECT * FROM catalogue WHERE IdCatalogue = '" + idCatalogue + "'");
             while (catalogues.next()) {
                 nbTotal = catalogues.getInt("nbTotal");
@@ -132,9 +127,8 @@ public class Database {
                 nbDispo--;
             }
             String nbDispoS = ", nbdispo = " + nbDispo;
-
-            System.out.println("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCtalogue = '" + idCatalogue + "'");
-            //this.stmt.executeQuery("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCtalogue = '" + idCatalogue + "'");
+            this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE IdCatalogue = '" + idCatalogue + "'");
+            this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '"+uid+"'");
             return "Delete OK";
         }
         return "Delete NOK";

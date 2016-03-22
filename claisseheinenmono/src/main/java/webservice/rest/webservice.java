@@ -13,6 +13,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,9 +41,11 @@ public class webservice {
         Lecteur lect = new Lecteur();
         System.out.println("connectReader");
         String uid = lect.openConnection();
-
         System.out.println("uid de la carte :" + uid);
-        return uid;
+        Database db = new Database();
+        db.prepareToQuery();
+        String data = db.getCardData(uid);
+        return data;
     }
 	
 	/*
@@ -57,7 +60,6 @@ public class webservice {
         Database data = new Database();
         data.prepareToQuery();
         return data.getAllCatalogues();
-
     }
 	
 	/*
@@ -89,12 +91,12 @@ public class webservice {
 	 * Supression d'une Entity de la base de donnée
 	 */
 
-    @Path("/deleteEnt")
+    @Path("/deleteEnt/{uid}")
     @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    public String deleteEntDB(String uid) throws SQLException {
+    public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
         System.out.println ("uid passé :"+uid);
         Database db = new Database();
+        db.prepareToQuery();
         return db.deleteEntity(uid);
     }
 	
