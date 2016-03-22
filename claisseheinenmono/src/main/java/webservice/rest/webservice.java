@@ -63,32 +63,33 @@ public class webservice {
     }
 
 	/*
-	 * Ajout d'une Entity dans la bdd
+     * Ajout d'une Entity dans la bdd
+     * @Param : entity = user ou product
+     * @Param : data = JSON formaté dans CET ORDRE
+     * Format du JSON : en premier (String)uid puis :
+     * USER : (String)nom,(String)prenom
+     * Produit : (String)idCatalogue,(String)dispo
 	 */
 
     @Path("/addEnt/{entity}/{data}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addEntDB() throws JSONException {
-
-
-//		if(card<8){
-//			/*
-//			 * then call methode card produit
-//			 */
-//		}elseif(card>13){
-//			/*
-//			 * then call methode card User
-//			 */
-//		}else{
-//			/*
-//			 * Return error message mauvaise card (ou check dans angular)
-//			 */
-//		}
+    public String addEntDB(@PathParam("entity") String entity, @PathParam("data") String data) throws JSONException, SQLException {
+        JSONObject datas = new JSONObject(data);
+        Database db = new Database();
+        db.prepareToQuery();
+        if (datas.getString("uid").length() == 8) {
+            return db.addEntity(entity, datas.getString("uid"), datas.getString("idCatalogue"), datas.getString("dispo"));
+        } else if (datas.getString("uid").length() == 14) {
+            return db.addEntity(entity, datas.getString("uid"), datas.getString("nom"), datas.getString("prenom"));
+        } else {
+            return "Taille de carte incorrecte";
+        }
     }
 
 	/*
-	 * Supression d'une Entity de la base de donnée
+     * Supression d'une Entity de la base de donnée
+     * @Param : UID de la carte de l'entité
 	 */
 
     @Path("/deleteEnt/{uid}")

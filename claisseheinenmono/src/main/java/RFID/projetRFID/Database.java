@@ -53,6 +53,28 @@ public class Database {
         }
     }
 
+    public String addEntity(String type, String uid, String param1, String param2) throws SQLException {
+        if (type.equals("user")) {
+            this.stmt.executeUpdate("INSERT INTO users (nomUser,prenomUser,uidUser) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
+            return "Ajout User Ok !";
+        } else if (type.equals("product")) {
+            this.stmt.executeUpdate("INSERT INTO stock (idCatalogue,dispo,uidProduit) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
+            ResultSet rs = this.stmt.executeQuery("SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = '" + param1 + "'");
+            int nbTotal = 0;
+            int nbDispo = 0;
+            while (rs.next()) {
+                nbTotal = rs.getInt("nbTotal");
+                nbDispo = rs.getInt("nbDispo");
+            }
+            if (param2.equals("1"))nbDispo++;
+            nbTotal++;
+            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal);
+            return "Ajout Produit ok !";
+        } else {
+            return "Bad type";
+        }
+    }
+
     public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {
