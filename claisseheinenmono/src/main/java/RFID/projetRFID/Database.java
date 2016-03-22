@@ -75,6 +75,20 @@ public class Database {
         }
     }
 
+    public int getNbDispo(String uid) throws SQLException {
+        int idCatalogue = 0;
+        int nbDispo = 0;
+        ResultSet rs = this.stmt.executeQuery("SELECT idCatalogue FROM stock WHERE uidProduit = '" + uid + "'");
+        while (rs.next()) {
+            idCatalogue = rs.getInt("idCatalogue");
+        }
+        rs = this.stmt.executeQuery("SELECT nbDispo FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
+        while (rs.next()) {
+            nbDispo = rs.getInt("nbDispo");
+        }
+        return nbDispo;
+    }
+
     public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {
