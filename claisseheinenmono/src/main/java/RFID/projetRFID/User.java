@@ -4,23 +4,25 @@ public class User {
 
     int idUser;
     String nomUser;
+    String prenomUser;
     String uidUser;
 
     public User() {
     }
 
-    public User(int idUser, String nomUser, String uidUser) {
+    public User(int idUser, String nomUser, String prenomUser, String uidUser) {
         this.idUser = idUser;
         this.nomUser = nomUser;
+        this.prenomUser = prenomUser;
         this.uidUser = uidUser;
     }
 
     public String toString() {
         String json = "[{\"idUser\" : " + this.idUser +
-                ",\"nomUser\":\"" + this.nomUser +
-                ",\"uidUser\":\"" + this.uidUser + "\"}]";;
-    
-		return json;
+                "\",\"nomUser\":\"" + this.nomUser +
+                "\",\"prenomUser\":\"" + this.prenomUser +
+                "\",\"uidUser\":\"" + this.uidUser + "\"}]";
+        return json;
     }
 
     public String getUidUser() {
@@ -37,6 +39,14 @@ public class User {
 
     public void setNomUser(String nomUser) {
         this.nomUser = nomUser;
+    }
+
+    public String getPrenomUser() {
+        return prenomUser;
+    }
+
+    public void setPrenomUser(String prenomUser) {
+        this.prenomUser = prenomUser;
     }
 
     public int getIdUser() {
