@@ -26,7 +26,6 @@ public class Database {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
         //String url = "jdbc:mysql://localhost:3307/rfid";
         String url = "jdbc:mysql://127.0.0.1:3306/rfid";
 
@@ -34,24 +33,49 @@ public class Database {
         this.stmt = con.createStatement();
     }
 
-    public JSONObject getAllCatalogues() throws SQLException, JSONException{
+    public Object getCardData(String uid) throws SQLException {
+        String data = "";
+        if (uid.length() == 8) {
+            System.out.println("Carte produit détectée");
+            // traitement carte produit
+            Database base = new Database();
+            base.prepareToQuery();
+            Produit produit = base.getProduitStock(uid);
+            System.out.println(produit.toString());
+            data = produit.toString();
+            return data;
+        } else if (uid.length() == 14) {
+            System.out.println("Carte user détectée");
+            Database base = new Database();
+            base.prepareToQuery();
+            User user = base.getProduitUser(uid);
+            System.out.println(user.toString());
+            data = user.toString();
+            return data;
+        } else {
+            System.out.println("Merci de passer une carte valide");
+        }
+        return data;
+    }
+
+    public JSONObject getAllCatalogues() throws SQLException, JSONException {
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
         JSONArray listCat = new JSONArray();
         JSONObject resList = new JSONObject();
 
-        while (allCat.next()){
-        	JSONObject obj = new JSONObject();
-        	obj.put("idCatalqogue", allCat.getInt("idCatalogue"));
-        	obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
-        	obj.put("nbDispo", allCat.getInt("nbDispo"));
-        	listCat.put(obj);
+        while (allCat.next()) {
+            JSONObject obj = new JSONObject();
+            obj.put("idCatalqogue", allCat.getInt("idCatalogue"));
+            obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
+            obj.put("nbDispo", allCat.getInt("nbDispo"));
+            listCat.put(obj);
         }
         System.out.println("Database");
         System.out.println(listCat);
-        resList.put("Livres",listCat);
+        resList.put("Livres", listCat);
         return resList;
     }
-    
+
     public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
 

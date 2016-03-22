@@ -28,53 +28,48 @@ import RFID.projetRFID.Produit;
 
 @Path("/")
 public class webservice {
-	
+
 	/*
-	 * Permet de lire et de retourner les données d'une carte
+     * Permet de lire et de retourner les données d'une carte
 	 */
 
-	@Path("/readCard")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public String connectReader() throws JSONException, CardException, SQLException {
-		Lecteur lect = new Lecteur();
-		System.out.println("connectReader");
+    @Path("/readCard")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String connectReader() throws JSONException, CardException, SQLException {
+        Lecteur lect = new Lecteur();
+        System.out.println("connectReader");
+        String uid = lect.openConnection();
 
-		Object card = lect.openConnection();
-		System.out.println("produit :" + card.toString());
-		String json = card.toString();
-		
-		System.out.println("webservice");
-		System.out.println(json);
-		
-		return json;
-	}
+        System.out.println("uid de la carte :" + uid);
+        return uid;
+    }
 	
 	/*
 	 * Lister les livres de la bibliotheque
 	 * 
 	 */
-	
-	@Path("/allCat")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public JSONObject allCatalogue() throws JSONException, SQLException {
-		Database data = new Database();
 
-		data.prepareToQuery();
+    @Path("/allCat")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject allCatalogue() throws JSONException, SQLException {
+        Database data = new Database();
+        data.prepareToQuery();
+        return data.getAllCatalogues();
 
-		return data.getAllCatalogues();
-		
-	}
+    }
 	
 	/*
 	 * Ajout d'une Entity dans la bdd
 	 */
-	
-	@Path("/addCard")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void addEntDB() throws JSONException{
+
+    @Path("/addEnt")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addEntDB() throws JSONException {
+
+
 //		if(card<8){
 //			/*
 //			 * then call methode card produit
@@ -88,50 +83,40 @@ public class webservice {
 //			 * Return error message mauvaise card (ou check dans angular)
 //			 */
 //		}
-	}
+    }
 	
 	/*
 	 * Supression d'une Entity de la base de donnée
 	 */
-	
-	@Path("/deleteEnt")
-	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteEntDB() throws JSONException{
-//		if(card<8){
-//			/*
-//			 * then call methode card produit
-//			 */
-//		}elseif(card>13){
-//			/*
-//			 * then call methode card User
-//			 */
-//		}else{
-//			/*
-//			 * Return error message mauvaise card (ou check dans angular)
-//			 */
-//		}
-	}
+
+    @Path("/deleteEnt")
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String deleteEntDB(String uid) throws SQLException {
+        System.out.println ("uid passé :"+uid);
+        Database db = new Database();
+        return db.deleteEntity(uid);
+    }
 	
 	/*
 	 * Emprunt d'un livre par un user
 	 */
-	
-	@Path("/empruntLivre")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void empruntLivre()throws JSONException{
-		
-	}
-	
-	/*
-	 * Retour d'un livre par un user
-	 */
-	@Path("/retourLivre")
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void retourLivre()throws JSONException{
-		
-	}
-	
+
+    @Path("/empruntLivre")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void empruntLivre() throws JSONException {
+
+    }
+
+    /*
+     * Retour d'un livre par un user
+     */
+    @Path("/retourLivre")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void retourLivre() throws JSONException {
+
+    }
+
 }

@@ -18,7 +18,7 @@ public class Lecteur {
     private static CardTerminal terminal;
     static Database db = new Database();
 
-    public Object openConnection() throws CardException, SQLException {
+    public String openConnection() throws CardException, SQLException {
         TerminalFactory factory = TerminalFactory.getDefault();
         CardTerminals cardterminals = factory.terminals();
         try {
@@ -73,35 +73,12 @@ public class Lecteur {
     }
 
     public static String waitForCard() throws CardException, SQLException {
-        String data = "";
         while (terminal.waitForCardPresent(5000)) {
             if (terminal.isCardPresent()) {
                 try {
                     affichage();
                     String uid = getCardData();
-
-                    if (uid.length() == 8) {
-                        System.out.println("Carte produit détectée");
-                        // traitement carte produit
-                        Database base = new Database();
-                        base.prepareToQuery();
-                        Produit produit = base.getProduitStock(uid);
-                        System.out.println(produit.toString());
-                        data = produit.toString();
-                        return data;
-                    } else if (uid.length() == 14) {
-                        System.out.println("Carte user détectée");
-                        Database base = new Database();
-                        base.prepareToQuery();
-                        User user = base.getProduitUser(uid);
-                        System.out.println(user.toString());
-                        data = user.toString();
-                        return data;
-                    } else {
-                        System.out.println("Merci de passer une carte valide");
-                    }
-                    // System.out.println(prod.toString());
-                    // return prod;
+                    return uid;
                 } catch (CardException e) {
                     System.err.println(e);
                 }
@@ -116,7 +93,7 @@ public class Lecteur {
                 }
             }
         }
-        return data;
+        return "";
     }
 
     public static Produit productCardProcess(String uid) throws SQLException {
