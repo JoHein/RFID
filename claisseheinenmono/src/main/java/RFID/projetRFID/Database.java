@@ -33,6 +33,26 @@ public class Database {
         this.stmt = con.createStatement();
     }
 
+    public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
+        if (uidUser.length() == 14 && uidProduit.length() == 8) {
+            int nbDispo = this.getNbDispo(uidProduit);
+            int dispo = 0;
+            if (action.equals("borrow")) {
+                this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser) VALUES ('" + uidProduit + "','" + uidUser + "')");
+                if (nbDispo > 0) nbDispo--;
+            } else {
+                this.stmt.executeUpdate("DELETE FROM emprunt WHERE uidProduit = '" + uidProduit + "' AND uidUser = '" + uidUser + "')");
+                nbDispo++;
+                dispo = 1;
+            }
+            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + " WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = '" + uidProduit + "')");
+            this.stmt.executeUpdate("UPDATE stock SET dispo = " + dispo + " WHERE uidProduit = '" + uidProduit + "'");
+            return action + " emprunt OK";
+        } else {
+            return "Emprunt non ajouté car mauvaises cartes : user.length = " + uidUser.length() + " et produit.length = " + uidProduit.length();
+        }
+    }
+
     public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {

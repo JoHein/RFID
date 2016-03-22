@@ -98,25 +98,26 @@ public class webservice {
         db.prepareToQuery();
         return db.deleteEntity(uid);
     }
-	
+
+
 	/*
-	 * Emprunt d'un livre par un user
+     * Modification de la table emprunt (ajout ou suppression) selon l'action réalisée
+     * @Param : action = borrow ou return
+     * @Param : uid = JSON avec uidUser et uidProduit
 	 */
 
-    @Path("/empruntLivre")
+    @Path("/manageBorrow/{action}/{uid}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void empruntLivre() throws JSONException {
-
-    }
-
-    /*
-     * Retour d'un livre par un user
-     */
-    @Path("/retourLivre")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void retourLivre() throws JSONException {
-
+    public String manageBorrow(@PathParam("action") String action, @PathParam("uid") String uid) throws
+            JSONException, SQLException {
+        if (action.equals("borrow") || action.equals("return")) {
+            JSONObject uids = new JSONObject(uid);
+            Database db = new Database();
+            db.prepareToQuery();
+            return db.manageBorrow(action, uids.getString("uidUser"), uids.getString("uidProduit"));
+        } else {
+            return "Bad Action";
+        }
     }
 }
