@@ -18,14 +18,33 @@ angular.module('RFID')
 		              $log.debug(vm.oeuvre[0].nomCatalogue);
 		          });
    			 
-    			 $scope.scanBook = function() {
+    			 	 function ScanCard() {
     				 $log.debug("function scan");
     				 $http.get('/rest/readCard')
     		          .then(function (response) {
     		              $log.debug("la reponse readcard");
     		              $log.debug(response);
-    		              vm.readCardInfo = response.data;
-    		              return vm.readCardInfo;
+    		              return response;
+    		          });
+    			 };
+    			 
+    			 $scope.deleteEnt = function() {
+    				 /*
+    				  * function lecture de carte 
+    				  */
+    				vm.uidCard= ScanCard();
+    				 
+    				/*
+    				 * function delete
+    				 */
+    			
+    				 $log.debug("function delete");
+    				 $http.post('/deleteEnt/'+vm.uidCard)
+    		          .then(function (response) {
+    		              $log.debug("la reponse deleteEnt");
+    		              $log.debug(response);
+    		              vm.deleteEnt = response;
+    		              return vm.deleteEnt;
     		          });
     			 };
     			 
