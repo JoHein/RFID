@@ -1,8 +1,0 @@
-INDEX VERSION 1.3+C:\Users\Fox\workspace\RFID\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-4019297549.index
-2847234308.index
-2682487275.index
-3232317376.index
-2890035389.index
-685641936.index
-907866617.index
