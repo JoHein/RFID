@@ -6,6 +6,7 @@ angular.module('RFID')
             function ($rootScope, $scope, $http, $stateParams, $timeout,$location, $log) {
     				var vm = this;
     			
+    				
     			 $http.get('/rest/allCat')
 		          .then(function (data) {
 		              $log.debug(data);
@@ -18,36 +19,6 @@ angular.module('RFID')
 		              $log.debug(vm.oeuvre[0].nomCatalogue);
 		          });
    			 
-//    			 function ScanCard() {
-//    				 $log.debug("function scan");
-//    				 $http.get('/rest/readCard')
-//    		          .then(function (response) {
-//    		              $log.debug("la reponse readcard");
-//    		              $log.debug(response.data[0].uidProduit);
-//    		              vm.uidProduit= response.data[0].uidProduit;
-////    		              return response;
-//    		          })
-//    			 };
-//    			 
-//    			 $scope.deleteEnt = function(){
-//    				 ScanCard();
-//    			 }, function (value){   					 
-//
-//    				 			$log.debug("Dans rest");
-//    		
-//    		    				 $log.debug(value);
-//    		    				 $log.debug("function delete");
-//    		    				 $http.post('rest/deleteEnt/'+value)
-//    		    		          .then(function (response) {
-//    		    		              $log.debug("la reponse deleteEnt");
-//    		    		              $log.debug(response);
-//    		    		              vm.deleteEnt = response;
-//    		    		              return vm.deleteEnt;
-//    		    		          });
-//    		    			
-//    			 };
-//    			
-
 
     			 function ScanCard(callback) {
 
@@ -79,6 +50,7 @@ angular.module('RFID')
 
     			         $log.debug("function delete");
     			         
+    			         if(value.idStock!=0){
 
     			         $http({method:'delete',url:'/rest/deleteEnt/'+value.uidProduit})
     			         
@@ -88,14 +60,19 @@ angular.module('RFID')
 
     			                 $log.debug(response);
 
-    			                 vm.deleteEnt = response;
-
-    			                 return vm.deleteEnt;
+    			                 vm.deleteEnt = response.data[0].retour;
+    			                 
+    			                 vm.affichage= vm.deleteEnt+"\n Nom livre: "+value.nomCatalogue;
+    			         
+    			                 return vm.affichage;
 
     			             })
-
+    			         }else{
+    			        	 vm.affichage= "Pas de donnée pour cette carte";
+    			        	 return  vm.affichage;
+    			         }
     			     });
-
+    			 
     			 };
 
 

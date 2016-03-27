@@ -119,7 +119,7 @@ public class Database {
 
         while (allCat.next()) {
             JSONObject obj = new JSONObject();
-            obj.put("idCatalqogue", allCat.getInt("idCatalogue"));
+            obj.put("idCatalogue", allCat.getInt("idCatalogue"));
             obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
             obj.put("nbDispo", allCat.getInt("nbDispo"));
             listCat.put(obj);
