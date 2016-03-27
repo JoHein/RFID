@@ -97,6 +97,7 @@ public class webservice {
     public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
         Database db = new Database();
         db.prepareToQuery();
+        System.out.println(db.deleteEntity(uid));
         return db.deleteEntity(uid);
     }
 

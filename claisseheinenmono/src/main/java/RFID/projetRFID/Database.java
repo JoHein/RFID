@@ -167,7 +167,7 @@ public class Database {
         int nbDispo = 0;
         if (uid.length() == 14) {
             this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
-            return "Delete OK";
+            return "[{\"retour\": \"Delete utilisateur OK\"}]";
         } else if (uid.length() == 8) {
             ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
             while (produits.next()) {
@@ -177,7 +177,10 @@ public class Database {
             while (catalogues.next()) {
                 nbTotal = catalogues.getInt("nbTotal");
                 nbDispo = catalogues.getInt("nbDispo");
+               String nomCatalogue = catalogues.getString("nomCatalogue");
             }
+             
+
             nbTotal--;
             if (nbDispo > 0) {
                 nbDispo--;
@@ -185,9 +188,9 @@ public class Database {
             String nbDispoS = ", nbdispo = " + nbDispo;
             this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCatalogue = '" + idCatalogue + "'");
             this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
-            return "Delete OK";
+            return"[{\"retour\": \"Delete livre OK\"}]";
         }
-        return "Delete NOK";
+        return "[{\"retour\": \"Delete livre OK\"}]";
     }
 
     public void closeConnection() throws SQLException {
