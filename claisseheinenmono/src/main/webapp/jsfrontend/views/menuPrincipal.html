@@ -5,44 +5,101 @@
 <title>Page principale</title>
 </head>
 <body>
-<br>
+	<br>
 
 
-<h1>Administration Biblothèque</h1>
+	<h1>Administration Biblothèque</h1>
 
-<div>
-<h2>Liste des oeuvres</h2>
-<table>
-<tbody>
-<tr>
-	<th>Titre de l'oeuvre</th>
-	<th>Nombre disponible</th>
-	</tr>
-	
-	<tr data-ng-repeat="data in menuController.oeuvre">
-	<td>{{data.nomCatalogue}}</td>
-	<td>{{data.nbDispo}}</td>
-	</tr>
-	</tbody>
-</table>
-</div>
+<section class="menuLeft">
+	<div class="affichage">
+		{{menuController.affichage}}
+	</div>
+
+	<div class="listeOeuvre">
+		<h3>Liste des oeuvres</h3>
+		<table>
+			<tbody>
+			<thead>
+				<tr>
+					<th>Oeuvre</th>
+					<th>Disponible</th>
+				</tr>
+			</thead>
+				<tr data-ng-repeat="data in menuController.oeuvre">
+					<td>{{data.nomCatalogue}}</td>
+					<td>{{data.nbDispo}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+	<div class="listeEmprunt">
+		<h3>Liste des Emprunts</h3>
+		<table>
+			<tbody>
+			<thead>
+				<tr>
+					<th>Etudiant</th>
+					<th>Oeuvre</th>
+				</tr>
+			</thead>
+				<tr data-ng-repeat="data in menuController.emprunt">
+					<td>Marcel Proust</td>
+					<td>Angular for the dummies</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 
 
-<button class="btn" data-ng-click="deleteEnt()">Delete Entity</button>
+<!-- 	<div> -->
+<!-- 		<table> -->
+<!-- 			<tbody> -->
+<!-- 				<tr>Uidproduit: {{menuController.readCardInfo[0].uidProduit}}</tr> -->
+<!-- 				<tr>ID catalogue:{{menuController.readCardInfo[0].idCatalogue}}</tr> -->
+<!-- 				<tr>Nom catalogue: -->
+<!-- 					{{menuController.readCardInfo[0].nomCatalogue}} -->
+<!-- 				</tr> -->
+<!-- 				<tr>Disponibilité: {{menuController.readCardInfo[0].dispo}} -->
+<!-- 				</tr> -->
+<!-- 			</tbody> -->
+<!-- 		</table> -->
+<!-- 	</div> -->
 
-<div>{{menuController.affichage}}</div>
+</section>
 
-<div>
-<table>
-<tbody>
-<tr>Uidproduit: {{menuController.readCardInfo[0].uidProduit}}</tr>
-<tr>ID catalogue: {{menuController.readCardInfo[0].idCatalogue}}</tr>
-<tr>Nom catalogue: {{menuController.readCardInfo[0].nomCatalogue}}</tr>
-<tr>Disponibilité: {{menuController.readCardInfo[0].dispo}}</tr>
-</tbody>
-</table>
-</div>
+
+<section class="menuRight">
+			<button class="btn" data-ng-click="deleteEnt()">Supprimer Utilisateur</button>
+			<button class="btn" data-ng-click="deleteEnt()">Supprimer Livre</button>
+			
+			<button class="btn" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
+			<div data-ng-show="collapsed">
+				<form novalidate class="form" action="">
+				
+					<input type="text" data-ng-model="user.nom" placeholder="nom" required>
+					<input type="text" data-ng-model="user.prenom" placeholder="prenom" required>
+					<input type="button" data-ng-click="reset()" value="Annuler" />
+					<input type="submit" data-ng-click="addEntityUser(user)" value="Enregistrer" />
+				
+				</form>
+			</div>
+			<button class="btn" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
+			<div data-ng-show="collapsed2">
+				<form novalidate class="form" action="">
+				
+					<input type="text" data-ng-model="book.idcatalogue" required>
+					<input type="text" data-ng-model="book.dispo" required>
+					<input type="button" data-ng-click="reset()" value="Annuler" />
+					<input type="submit" data-ng-click="addEntityUser(book)" value="Enregistrer" />
+				
+				</form>
+			</div>
+</section>
+
+
 
 </body>
 </html>

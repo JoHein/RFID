@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+
+
+body{
+	padding-left:2em;
+	padding-right:2em;
+}
+
+.menuLeft{
+	float:left;
+	width:60%;
+}
+
+.affichage{
+	background:grey;
+	width:95%;
+	height:15em;
+	border: 1px solid black;
+}
+
+.listeOeuvre{
+	width:45%;
+}
+
+.menuRight{
+	width:40%;
+	float:right;
+}
+
+.form input.ng-invalid.ng-touched {
+    background-color: #FA787E;
+  }
+
+.form input.ng-valid.ng-touched {
+  background-color: #78FA89;
+}

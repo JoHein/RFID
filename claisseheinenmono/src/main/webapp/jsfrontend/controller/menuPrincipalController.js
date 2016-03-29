@@ -75,7 +75,24 @@ angular.module('RFID')
     			 
     			 };
 
+    			 
+    			 $scope.addEntityUser = function(user){
+    				 $scope.user= {};
+    				 
+    				 $log.debug("addEntUser");
 
+    				 $log.debug(user);
+    				 
+    				 /*
+    				  * faire le scan de carte
+    				  * faire une alerte Jquery popup 
+    				  * pour valider la creation avant le rentrage en BDD
+    				  * 
+    				  * Message de confirmation dans vm.affichage;
+    				  */
+    				 
+    			 };
+    			 
 
     			 
     }]);

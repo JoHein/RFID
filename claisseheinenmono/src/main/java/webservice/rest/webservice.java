@@ -83,7 +83,8 @@ public class webservice {
         } else if (datas.getString("uid").length() == 14) {
             return db.addEntity(entity, datas.getString("uid"), datas.getString("nom"), datas.getString("prenom"));
         } else {
-            return "Taille de carte incorrecte";
+            return "[{\"retour\": \"Taille de carte incorrecte\"}]";
+         
         }
     }
 
