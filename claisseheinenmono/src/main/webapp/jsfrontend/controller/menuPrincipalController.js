@@ -76,12 +76,65 @@ angular.module('RFID')
     			 };
 
     			 
-    			 $scope.addEntityUser = function(user){
+    			 $scope.addEntity = function(user,book){
     				 $scope.user= {};
     				 
+    				 /*
+    				  * Ajouter UID au JSON
+    				  */
+    				 
+		        	 $scope.book= {};
+
     				 $log.debug("addEntUser");
 
     				 $log.debug(user);
+    				 
+    				 ScanCard(function(value){
+
+    			         $log.debug("Dans rest");
+
+    			         $log.debug(value.uidProduit);
+
+    			         $log.debug("function delete");
+    			         
+    			         if(value.uidProduit>9){
+    			        	 user.uid =value.uidProduit;
+
+    			         $http({method:'post',url:'/rest/addEnt/user/'+user})
+    			         
+    			         .then(function (response) {
+
+    			                 $log.debug("la reponse addEntUser");
+
+    			                 $log.debug(response);
+
+    			                 vm.deleteEnt = response.data[0].retour;
+    			                 
+    			                 vm.affichage= user.nom+"\n"+user.prenom+" a été ajouté(e)";
+    			         
+    			                 return vm.affichage;
+
+    			             })
+    			         }else if(value.uidProduit<9){
+    			        	 book.uid =value.uidProduit;
+
+        			         $http({method:'post',url:'/rest/addEnt/product/'+book})
+        			         
+        			         .then(function (response) {
+
+        			                 $log.debug("la reponse addentBook");
+
+        			                 $log.debug(response);
+
+        			                 vm.deleteEnt = response.data[0].retour;
+        			                 
+        			                 vm.affichage= book.titre+"\n a été ajouté";
+        			         
+        			                 return vm.affichage;
+
+        			             })
+    			         }
+    			     });
     				 
     				 /*
     				  * faire le scan de carte
