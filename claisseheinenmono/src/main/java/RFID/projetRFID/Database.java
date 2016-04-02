@@ -56,7 +56,7 @@ public class Database {
     public String addEntity(String type, String uid, String param1, String param2) throws SQLException {
         if (type.equals("user")) {
             this.stmt.executeUpdate("INSERT INTO users (nomUser,prenomUser,uidUser) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
-            return "Ajout User Ok !";
+            return "[{\"retour\": \"Ajout User OK\"}]";
         } else if (type.equals("product")) {
             this.stmt.executeUpdate("INSERT INTO stock (idCatalogue,dispo,uidProduit) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
             ResultSet rs = this.stmt.executeQuery("SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = '" + param1 + "'");
@@ -69,9 +69,9 @@ public class Database {
             if (param2.equals("1"))nbDispo++;
             nbTotal++;
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal);
-            return "Ajout Produit ok !";
+            return "[{\"retour\": \"Ajout Produit OK\"}]";
         } else {
-            return "Bad type";
+            return "[{\"retour\": \"Bad type\"}]";
         }
     }
 
@@ -96,7 +96,7 @@ public class Database {
             // traitement carte produit
             Produit produit = this.getProduitStock(uid);
             	if((produit.getUidProduits())==null){
-            	return "[{\"uid\": \""+uid+"\"}]";
+            	return "[{\"uidNew\": \""+uid+"\"}]";
             	}
             System.out.println(produit.toString());
             data = produit.toString();
@@ -107,7 +107,7 @@ public class Database {
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
             if((user.getUidUser())==null){
-            	return "[{\"uid\": "+uid+"}]";
+            	return "[{\"uidNew\": "+uid+"}]";
             	}
             System.out.println(user.toString());
             data = user.toString();

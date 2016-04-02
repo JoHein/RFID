@@ -33,9 +33,11 @@ angular.module('RFID')
     			             $log.debug(response.data[0]);
     			             $log.debug(response);
 
-    			             if(response){
-    			            	 
-    			             }
+
+//    			             if(response.data[0].uidNew){
+//        			             $log.debug("dans le if");
+//        			             vm.Produit = response.data[0];
+//    			             }
     			             vm.Produit= response.data[0];
 
     			             callback(vm.Produit);
@@ -87,12 +89,12 @@ angular.module('RFID')
 
     			         $log.debug("Dans ScanENTADD");
     			         $log.debug(data);
+    			         $log.debug(value);
+    			         if(value.idStock){
+    			        	 vm.affichage ="La carte existe déjà";
+    			        	 return vm.affichage;
+    			         }else{
 
-    			         $log.debug(value.uidProduit);
-    			         
-    			         $log.debug((value.uidProduit).length);
-    			         $log.debug((value.uidProduit).length>10);
-    			         $log.debug((value.uidProduit).length<10);
 
 
 //    			         if((value.uidProduit).length>10){
@@ -116,16 +118,15 @@ angular.module('RFID')
 //    			         }else if(value.uidProduit<10){
     			         	$log.debug("Else if");
 
-    			        	 data.uid =value.uidProduit;
+    			        	 data.uid =value.uidNew;
     			        	 data.dispo =1;
     			        	 
     	    				 $log.debug("data apres ajout");
 
     	    				 $log.debug(data);
-    	    				var json= JSON.stringify(data);
-   	    				 $log.debug(json);
+    	    		
 
-        			         $http({method:'post',url:'/rest/addEnt/product/'+data.uid+'/'+data.idCatalogue+'/1', headers: {'Content-Type': 'application/json'}})
+        			         $http({method:'post',url:'/rest/addEnt/product/'+data.uid+'/'+data.idCatalogue+'/1'})
         			         
         			         .then(function (response) {
 
@@ -134,9 +135,8 @@ angular.module('RFID')
         			                 $log.debug(response);
 
         			                 $log.debug(response.data[0].retour);
-;
         			                 
-        			                 vm.affichage= response.data[0].titre+"\n a été ajouté";
+        			                 vm.affichage= response.data[0].retour;
         			         
         			                 return vm.affichage;
 
@@ -145,6 +145,7 @@ angular.module('RFID')
 //    			        	 vm.affichage = "Erreur de carte";
 //    			        	 return vm.affichage;
 //    			         }
+    			         }
     			     });
     				 
     				 /*
