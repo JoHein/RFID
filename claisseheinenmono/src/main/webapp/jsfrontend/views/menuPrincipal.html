@@ -79,10 +79,10 @@
 			<div data-ng-show="collapsed">
 				<form novalidate class="form" action="">
 				
-					<input type="text" data-ng-model="user.nom" placeholder="nom" required>
-					<input type="text" data-ng-model="user.prenom" placeholder="prenom" required>
+					<input type="text" data-ng-model="data.nom" placeholder="nom" required>
+					<input type="text" data-ng-model="data.prenom" placeholder="prenom" required>
 					<input type="button" data-ng-click="reset()" value="Annuler" />
-					<input type="submit" data-ng-click="addEntity(user)" value="Enregistrer" />
+					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>
 			</div>
@@ -90,10 +90,9 @@
 			<div data-ng-show="collapsed2">
 				<form novalidate class="form" action="">
 				
-					<input type="text" data-ng-model="book.idcatalogue" required>
-					<input type="text" data-ng-model="book.dispo" required>
+					<input type="text" data-ng-model="data.idCatalogue" required>
 					<input type="button" data-ng-click="reset()" value="Annuler" />
-					<input type="submit" data-ng-click="addEntity(book)" value="Enregistrer" />
+					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>
 			</div>

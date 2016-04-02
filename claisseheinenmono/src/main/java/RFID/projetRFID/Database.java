@@ -95,6 +95,9 @@ public class Database {
             System.out.println("Carte produit détectée");
             // traitement carte produit
             Produit produit = this.getProduitStock(uid);
+            	if((produit.getUidProduits())==null){
+            	return "[{\"uid\": \""+uid+"\"}]";
+            	}
             System.out.println(produit.toString());
             data = produit.toString();
             return data;
@@ -103,6 +106,9 @@ public class Database {
             Database base = new Database();
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
+            if((user.getUidUser())==null){
+            	return "[{\"uid\": "+uid+"}]";
+            	}
             System.out.println(user.toString());
             data = user.toString();
             return data;

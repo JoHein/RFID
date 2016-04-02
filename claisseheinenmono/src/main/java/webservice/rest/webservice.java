@@ -37,14 +37,17 @@ public class webservice {
     @Path("/readCard")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String connectReader() throws JSONException, CardException, SQLException {
+    public String connectReader() throws JSONException, SQLException, CardException {
         Lecteur lect = new Lecteur();
         System.out.println("connectReader");
         String uid = lect.openConnection();
         System.out.println("uid de la carte :" + uid);
         Database db = new Database();
         db.prepareToQuery();
-        String data = db.getCardData(uid);
+        String data = db.getCardData(uid);    
+        System.out.println(data);
+        System.out.println(uid);
+
         return data;
     }
 
@@ -71,17 +74,18 @@ public class webservice {
      * Produit : (String)idCatalogue,(String)dispo
 	 */
 
-    @Path("/addEnt/{entity}/{data}")
+    @Path("/addEnt/{entity}/{uid}/{param1}/{param2}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public String addEntDB(@PathParam("entity") String entity, @PathParam("data") String data) throws JSONException, SQLException {
-        JSONObject datas = new JSONObject(data);
+    public String addEntDB(@PathParam("entity") String entity, @PathParam("uid") String uid, @PathParam("param1") String param1, @PathParam("param2") String param2) throws JSONException, SQLException {
+//        JSONObject datas = new JSONObject(data);
         Database db = new Database();
         db.prepareToQuery();
-        if (datas.getString("uid").length() == 8) {
-            return db.addEntity(entity, datas.getString("uid"), datas.getString("idCatalogue"), datas.getString("dispo"));
-        } else if (datas.getString("uid").length() == 14) {
-            return db.addEntity(entity, datas.getString("uid"), datas.getString("nom"), datas.getString("prenom"));
+        System.out.println(uid.length());
+        if (uid.length() == 8) {
+            return db.addEntity(entity, uid,param1, param2);
+        } else if (uid.length() == 14) {
+            return db.addEntity(entity,uid, param1, param2);
         } else {
             return "[{\"retour\": \"Taille de carte incorrecte\"}]";
          
