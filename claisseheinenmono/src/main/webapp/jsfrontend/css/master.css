@@ -34,3 +34,10 @@ body{
 .form input.ng-valid.ng-touched {
   background-color: #78FA89;
 }
+
+.display{
+	color:white;
+	padding-top:3em;
+	font-size: 2em;
+	text-align: center;
+}

@@ -12,7 +12,7 @@
 
 <section class="menuLeft">
 	<div class="affichage">
-		{{menuController.affichage}}
+		<h1 class="display">{{menuController.affichage}}</h1>
 	</div>
 
 	<div class="listeOeuvre">
@@ -72,8 +72,8 @@
 
 
 <section class="menuRight">
-			<button class="btn" data-ng-click="deleteEnt()">Supprimer Utilisateur</button>
-			<button class="btn" data-ng-click="deleteEnt()">Supprimer Livre</button>
+			<button class="btn" data-ng-click="deleteEntUser()">Supprimer Utilisateur</button>
+			<button class="btn" data-ng-click="deleteEntBook()">Supprimer Livre</button>
 			
 			<button class="btn" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
 			<div data-ng-show="collapsed">
@@ -81,7 +81,6 @@
 				
 					<input type="text" data-ng-model="data.nom" placeholder="nom" required>
 					<input type="text" data-ng-model="data.prenom" placeholder="prenom" required>
-					<input type="button" data-ng-click="reset()" value="Annuler" />
 					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>
@@ -91,7 +90,6 @@
 				<form novalidate class="form" action="">
 				
 					<input type="text" data-ng-model="data.idCatalogue" required>
-					<input type="button" data-ng-click="reset()" value="Annuler" />
 					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>

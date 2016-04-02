@@ -2,8 +2,8 @@
 
 angular.module('RFID')
     .controller('menuPrincipalController', 
-    		['$rootScope', '$scope', '$http', '$stateParams', '$timeout','$location', '$log',
-            function ($rootScope, $scope, $http, $stateParams, $timeout,$location, $log) {
+    		['$rootScope', '$scope', '$http', '$stateParams', '$timeout','$location', '$log', '$window',
+            function ($rootScope, $scope, $http, $stateParams, $timeout,$location, $log, $window) {
     				var vm = this;
     			
     				
@@ -34,10 +34,6 @@ angular.module('RFID')
     			             $log.debug(response);
 
 
-//    			             if(response.data[0].uidNew){
-//        			             $log.debug("dans le if");
-//        			             vm.Produit = response.data[0];
-//    			             }
     			             vm.Produit= response.data[0];
 
     			             callback(vm.Produit);
@@ -46,7 +42,47 @@ angular.module('RFID')
 
     			 }
 
-    			 $scope.deleteEnt = function(){
+    			 $scope.deleteEntUser = function(){
+
+    			     ScanCard(function(value){
+
+    			         $log.debug("Dans rest");
+
+    			         $log.debug(value.uidUser);
+
+    			         $log.debug("function delete");
+    			         var deleteUser =$window.confirm("Are you sure you want to delete this user?");
+			 				if(deleteUser){
+		    			    if((value.uidUser).length==14){
+
+	    			         $http({method:'delete',url:'/rest/deleteEnt/'+value.uidUser})
+	    			         
+	    			         .then(function (response) {
+	
+	    			                 $log.debug("la reponse deleteEnt");
+	
+	    			                 $log.debug(response);
+	
+	    			                 vm.deleteEnt = response.data[0].retour;
+	    			                 
+	    			                 vm.affichage= vm.deleteEnt+"\n User: "+value.nomUser +" "+ value.prenomUser;
+	    			         
+	    			                 return vm.affichage;
+	
+	    			             })
+    			         }else{
+    			        	 vm.affichage= "Pas de donnée pour cette carte";
+    			        	 return  vm.affichage;
+    			         }
+    			     }else{
+    			    	 vm.affichage ="Operation annulée";
+    			    	 return vm.affichage;
+    			     }
+    			     });
+    			 
+    			 };
+    			 
+    			 $scope.deleteEntBook = function(){
 
     			     ScanCard(function(value){
 
@@ -55,31 +91,38 @@ angular.module('RFID')
     			         $log.debug(value.uidProduit);
 
     			         $log.debug("function delete");
-    			         
-    			         if(value.idStock!=0){
-
-    			         $http({method:'delete',url:'/rest/deleteEnt/'+value.uidProduit})
-    			         
-    			         .then(function (response) {
-
-    			                 $log.debug("la reponse deleteEnt");
-
-    			                 $log.debug(response);
-
-    			                 vm.deleteEnt = response.data[0].retour;
-    			                 
-    			                 vm.affichage= vm.deleteEnt+"\n Nom livre: "+value.nomCatalogue;
-    			         
-    			                 return vm.affichage;
-
-    			             })
-    			         }else{
+    			         var deleteUser =$window.confirm("Are you sure you want to delete this book?");
+			 				if(deleteUser){
+    			         if((value.uidProduit).length==8){
+    			        	 
+			    			         $http({method:'delete',url:'/rest/deleteEnt/'+value.uidProduit})
+			    			         
+			    			         .then(function (response) {
+			
+			    			                 $log.debug("la reponse deleteEnt");
+			
+			    			                 $log.debug(response);
+			
+			    			                 vm.deleteEnt = response.data[0].retour;
+			    			                 
+			    			                 vm.affichage= vm.deleteEnt+"\n Nom livre: "+value.nomCatalogue;
+			    			         
+			    			                 return vm.affichage;
+			
+			    			             })
+    			 				
+    			        }else{
     			        	 vm.affichage= "Pas de donnée pour cette carte";
     			        	 return  vm.affichage;
     			         }
+    			     }else{
+    			    	 vm.affichage ="Operation annulée";
+    			    	 return vm.affichage;
+    			     }
     			     });
     			 
     			 };
+
 
     			 
     			 $scope.addEntity = function(data){
@@ -90,32 +133,32 @@ angular.module('RFID')
     			         $log.debug("Dans ScanENTADD");
     			         $log.debug(data);
     			         $log.debug(value);
-    			         if(value.idStock){
+    			         
+    			         if(value.idStock |value.idUser){
     			        	 vm.affichage ="La carte existe déjà";
     			        	 return vm.affichage;
     			         }else{
 
 
 
-//    			         if((value.uidProduit).length>10){
-//    			        	 user.uid =value.uidProduit;
-//
-//    			         $http({method:'post',url:'/rest/addEnt/user/'+user})
-//    			         
-//    			         .then(function (response) {
-//
-//    			                 $log.debug("la reponse addEntUser");
-//
-//    			                 $log.debug(response);
-//
-//    			                 vm.deleteEnt = response.data[0].retour;
-//    			                 
-//    			                 vm.affichage= user.nom+"\n"+user.prenom+" a été ajouté(e)";
-//    			         
-//    			                 return vm.affichage;
-//
-//    			             })
-//    			         }else if(value.uidProduit<10){
+    			         if((value.uidNew).length>10){
+    			        	 data.uid =value.uidNew;
+    			        	 
+    			         $http({method:'post',url:'/rest/addEnt/user/'+data.uid+'/'+data.nom+'/'+data.prenom})
+    			         
+    			         .then(function (response) {
+
+    			                 $log.debug("la reponse addEntUser");
+
+    			                 $log.debug(response);
+
+    			                 
+    			                 vm.affichage= response.data[0].retour;
+    			         
+    			                 return vm.affichage;
+
+    			             })
+    			         }else if(value.uidNew<10){
     			         	$log.debug("Else if");
 
     			        	 data.uid =value.uidNew;
@@ -141,23 +184,13 @@ angular.module('RFID')
         			                 return vm.affichage;
 
         			             })
-//    			         }else{
-//    			        	 vm.affichage = "Erreur de carte";
-//    			        	 return vm.affichage;
-//    			         }
+    			         }else{
+    			        	 vm.affichage = "Erreur de carte";
+    			        	 return vm.affichage;
     			         }
-    			     });
-    				 
-    				 /*
-    				  * faire le scan de carte
-    				  * $window
-    				  * pour valider la creation avant le rentrage en BDD
-    				  * 
-    				  * Message de confirmation dans vm.affichage;
-    				  */
-    				 
+    			         }
+    			     }); 				 
+    
     			 };
-    			 
-
     			 
     }]);

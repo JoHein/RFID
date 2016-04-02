@@ -92,26 +92,30 @@ public class Database {
     public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {
+        	
             System.out.println("Carte produit détectée");
             // traitement carte produit
             Produit produit = this.getProduitStock(uid);
             	if((produit.getUidProduits())==null){
-            	return "[{\"uidNew\": \""+uid+"\"}]";
+            		return "[{\"uidNew\": \""+uid+"\"}]";
             	}
             System.out.println(produit.toString());
             data = produit.toString();
             return data;
+            
         } else if (uid.length() == 14) {
+        	
             System.out.println("Carte user détectée");
             Database base = new Database();
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
-            if((user.getUidUser())==null){
-            	return "[{\"uidNew\": "+uid+"}]";
-            	}
+	            if((user.getUidUser())==null){
+	            	return "[{\"uidNew\": \""+uid+"\"}]";
+	            }
             System.out.println(user.toString());
             data = user.toString();
             return data;
+            
         } else {
             System.out.println("Merci de passer une carte valide");
         }
@@ -183,10 +187,8 @@ public class Database {
             while (catalogues.next()) {
                 nbTotal = catalogues.getInt("nbTotal");
                 nbDispo = catalogues.getInt("nbDispo");
-               String nomCatalogue = catalogues.getString("nomCatalogue");
             }
              
-
             nbTotal--;
             if (nbDispo > 0) {
                 nbDispo--;
@@ -196,7 +198,7 @@ public class Database {
             this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
             return"[{\"retour\": \"Delete livre OK\"}]";
         }
-        return "[{\"retour\": \"Delete livre OK\"}]";
+        return "[{\"retour\": \"Delete \"}]";
     }
 
     public void closeConnection() throws SQLException {

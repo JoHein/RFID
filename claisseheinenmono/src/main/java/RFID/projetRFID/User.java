@@ -18,10 +18,7 @@ public class User {
     }
 
     public String toString() {
-        String json = "[{\"idUser\" : " + this.idUser +
-                "\",\"nomUser\":\"" + this.nomUser +
-                "\",\"prenomUser\":\"" + this.prenomUser +
-                "\",\"uidUser\":\"" + this.uidUser + "\"}]";
+        String json = "[{\"idUser\" : " + this.idUser +",\"nomUser\":\"" + this.nomUser +"\",\"prenomUser\":\"" + this.prenomUser +"\",\"uidUser\":\"" + this.uidUser + "\"}]";
         return json;
     }
 
