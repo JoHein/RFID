@@ -195,82 +195,43 @@ angular.module('RFID')
     			 
     			 $scope.emprunt = function(){
     				 
-
     				 $http.get('/rest/readCard')
-
     				     .then(function (response) {
+			                 $log.debug("la reponse 1");
+			                 $log.debug(response);
 
-    				         $log.debug("la reponse readcard 1");
+			                 $log.debug(response.data[0]);
 
-    				         $log.debug(response.data[0].uidUser);
-    	   			         vm.cardUser= response.data[0].uidUser;
+   				    	  vm.UserInfo=response.data[0];
+   	    				 var nextEpisode =$window.confirm("Emprunt pour User: "+  vm.UserInfo.nomUser+" "+vm.UserInfo.prenomUser+"?");
 
-    				     })
-    				 if((vm.cardUser).length==14){
-    				  $http.get('/rest/readCard')
-    				  .then(function(response){
- 				         $log.debug("la reponse readcard 2");
-
- 				         $log.debug(response.data[0].uidProduit);
-
-   			         vm.cardProduct= response.data[0].uidProduit;
-
-    				  });
-    				 }
-//    				         $http.post('/rest/manageBorrow/emprunt/'+vm.cardUser+'/'+vm.cardProduct)
-//
-//    				             .then(function (response) {
-//
-//    				                 $log.debug("la reponse emprunt");
-//
-//    				                 $log.debug(response);
-//
-//
-//    				             });
-//    				
-    			       
-
-
-
-    				 
-//    				 vm.affichage = "Présentez carte User";
-//    				  ScanCard(function(value){
-//
-//     			         $log.debug("Dans rest");
-//
-//     			         $log.debug(value.uidUser);
-//
-//     			         $log.debug("function emprunt user");
-//     			         vm.cardUser= value.uidUser;
-//    				  });
-//     				 vm.affichage = "Présentez carte Book";
-//
-//    				  ScanCard(function(value){
-//
-//      			         $log.debug("Dans rest");
-//
-//      			         $log.debug(value.uidProduit);
-//
-//      			         $log.debug("function emprunt Livre");
-//      			         vm.cardProduct= value.uidProduit;
-//     				  });
-//    				  
-//    				  $http({method:'post',url:'/rest/manageBorrow/emprunt/'+vm.cardProduct+'/'+vm.cardProduct})
-// 			    			         
-// 			    			         .then(function (response) {
-// 			
-// 			    			                 $log.debug("la reponse emprunt");
-// 			
-// 			    			                 $log.debug(response);
-// 			
-// 			    			                 vm.deleteEnt = response.data[0].retour;
-// 			    			                 
-// 			    			                 vm.affichage= vm.deleteEnt+"\n Nom livre: "+value.nomCatalogue;
-// 			    			         
-// 			    			                 return vm.affichage;
-// 			
-// 			    			             });
-//     			     
+    				   
+			 				if(nextEpisode){     
+    				    	$http.get('/rest/readCard')
+    				    		 .then(function(response2){
+				                 $log.debug("la reponse 2");
+				                 $log.debug(response2);
+	
+	    				    	 vm.cardProd= response2.data[0];
+    				    		 
+		  	    				 var nextFinalEpisode =$window.confirm("Validez emprunt pour User: "+  vm.UserInfo.nomUser+" "+vm.UserInfo.prenomUser+"\n Livre: "+vm.cardProd.nomCatalogue+"?");
+					 				if(nextFinalEpisode){     
+					 					  $http.post('/rest/manageBorrow/borrow/'+vm.UserInfo.uidUser+'/'+vm.cardProd.uidProduit) 					 
+					 					     				             
+					 					  		.then(function (response) {
+					 					 
+					 					  			$log.debug("la reponse emprunt");
+					 					 
+					 					  			$log.debug(response); 					 
+					 					 vm.affichage ="Emprunt enregistré";
+					 					 	
+					 					  		})
+					 				
+					 					}
+    				    		 })
+			 				}
+    				    		 
+			    		 })  			     
     			 };
     			 
     }]);

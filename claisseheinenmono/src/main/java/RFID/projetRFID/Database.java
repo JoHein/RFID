@@ -47,7 +47,7 @@ public class Database {
             }
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + " WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = '" + uidProduit + "')");
             this.stmt.executeUpdate("UPDATE stock SET dispo = " + dispo + " WHERE uidProduit = '" + uidProduit + "'");
-            return "[{\"retour\": \""+action+"\" OK\"}]"
+            return "[{\"retour\": \""+action+" OK\"}]"
 ;
         } else {
             return "[{\"retour\": \"Emprunt non ajouté car mauvaises cartes:\""+uidUser.length()+"\" et produit \""+uidProduit.length()+"\"}]";
