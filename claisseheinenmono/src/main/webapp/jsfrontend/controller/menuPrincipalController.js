@@ -136,12 +136,10 @@ angular.module('RFID')
     			         $log.debug(data);
     			         $log.debug(value);
     			         
-    			         if(value.idStock |value.idUser){
+    			         if(value.idStock | value.idUser){
     			        	 vm.affichage ="La carte existe déjà";
     			        	 return vm.affichage;
     			         }else{
-
-
 
     			         if((value.uidNew).length>10){
     			        	 data.uid =value.uidNew;
@@ -160,7 +158,7 @@ angular.module('RFID')
     			                 return vm.affichage;
 
     			             })
-    			         }else if(value.uidNew<10){
+    			         }else if((value.uidNew).length<10){
     			         	$log.debug("Else if");
 
     			        	 data.uid =value.uidNew;
