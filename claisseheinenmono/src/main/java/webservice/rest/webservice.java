@@ -82,10 +82,8 @@ public class webservice {
         Database db = new Database();
         db.prepareToQuery();
         System.out.println(uid.length());
-        if (uid.length() == 8) {
+        if (uid.length() == 8 || uid.length()==14) {
             return db.addEntity(entity, uid,param1, param2);
-        } else if (uid.length() == 14) {
-            return db.addEntity(entity,uid, param1, param2);
         } else {
             return "[{\"retour\": \"Taille de carte incorrecte\"}]";
          
