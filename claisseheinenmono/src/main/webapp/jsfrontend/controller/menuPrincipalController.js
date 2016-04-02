@@ -43,7 +43,7 @@ angular.module('RFID')
     			 }
 
     			 $scope.deleteEntUser = function(){
-
+    				 vm.affichage = "Présentez une carte User";
     			     ScanCard(function(value){
 
     			         $log.debug("Dans rest");
@@ -83,6 +83,7 @@ angular.module('RFID')
     			 };
     			 
     			 $scope.deleteEntBook = function(){
+    				 vm.affichage = "Présentez une carte Book";
 
     			     ScanCard(function(value){
 
@@ -126,7 +127,8 @@ angular.module('RFID')
 
     			 
     			 $scope.addEntity = function(data){
-    				    				 
+    				 vm.affichage = "Présentez une carte";
+		 
     				 ScanCard(function(value){
         				 $scope.data= {};
 
