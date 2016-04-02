@@ -78,7 +78,6 @@ public class webservice {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String addEntDB(@PathParam("entity") String entity, @PathParam("uid") String uid, @PathParam("param1") String param1, @PathParam("param2") String param2) throws JSONException, SQLException {
-//        JSONObject datas = new JSONObject(data);
         Database db = new Database();
         db.prepareToQuery();
         System.out.println(uid.length());
@@ -111,18 +110,18 @@ public class webservice {
      * @Param : uid = JSON avec uidUser et uidProduit
 	 */
 
-    @Path("/manageBorrow/{action}/{uid}")
+    @Path("/manageBorrow/{action}/{uidUser}/{uidProduit}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public String manageBorrow(@PathParam("action") String action, @PathParam("uid") String uid) throws
+    public String manageBorrow(@PathParam("action") String action, @PathParam("uidUser") String uidUser, @PathParam("uidProduit") String uidProduit) throws
             JSONException, SQLException {
+    	
         if (action.equals("borrow") || action.equals("return")) {
-            JSONObject uids = new JSONObject(uid);
             Database db = new Database();
             db.prepareToQuery();
-            return db.manageBorrow(action, uids.getString("uidUser"), uids.getString("uidProduit"));
+            return db.manageBorrow(action, uidUser, uidProduit);
         } else {
-            return "Bad Action";
+            return "[{\"retour\": \"Action non reconnue\"}]";
         }
     }
 }

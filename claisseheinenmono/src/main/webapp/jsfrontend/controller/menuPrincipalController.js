@@ -167,7 +167,6 @@ angular.module('RFID')
     	    				 $log.debug("data apres ajout");
 
     	    				 $log.debug(data);
-    	    		
 
         			         $http({method:'post',url:'/rest/addEnt/product/'+data.uid+'/'+data.idCatalogue+'/1'})
         			         
@@ -176,6 +175,7 @@ angular.module('RFID')
         			                 $log.debug("la reponse addentBook");
 
         			                 $log.debug(response);
+        			                 $log.debug(response.data[0]);
 
         			                 $log.debug(response.data[0].retour);
         			                 
@@ -191,6 +191,86 @@ angular.module('RFID')
     			         }
     			     }); 				 
     
+    			 };
+    			 
+    			 $scope.emprunt = function(){
+    				 
+
+    				 $http.get('/rest/readCard')
+
+    				     .then(function (response) {
+
+    				         $log.debug("la reponse readcard 1");
+
+    				         $log.debug(response.data[0].uidUser);
+    	   			         vm.cardUser= response.data[0].uidUser;
+
+    				     })
+    				 if((vm.cardUser).length==14){
+    				  $http.get('/rest/readCard')
+    				  .then(function(response){
+ 				         $log.debug("la reponse readcard 2");
+
+ 				         $log.debug(response.data[0].uidProduit);
+
+   			         vm.cardProduct= response.data[0].uidProduit;
+
+    				  });
+    				 }
+//    				         $http.post('/rest/manageBorrow/emprunt/'+vm.cardUser+'/'+vm.cardProduct)
+//
+//    				             .then(function (response) {
+//
+//    				                 $log.debug("la reponse emprunt");
+//
+//    				                 $log.debug(response);
+//
+//
+//    				             });
+//    				
+    			       
+
+
+
+    				 
+//    				 vm.affichage = "Présentez carte User";
+//    				  ScanCard(function(value){
+//
+//     			         $log.debug("Dans rest");
+//
+//     			         $log.debug(value.uidUser);
+//
+//     			         $log.debug("function emprunt user");
+//     			         vm.cardUser= value.uidUser;
+//    				  });
+//     				 vm.affichage = "Présentez carte Book";
+//
+//    				  ScanCard(function(value){
+//
+//      			         $log.debug("Dans rest");
+//
+//      			         $log.debug(value.uidProduit);
+//
+//      			         $log.debug("function emprunt Livre");
+//      			         vm.cardProduct= value.uidProduit;
+//     				  });
+//    				  
+//    				  $http({method:'post',url:'/rest/manageBorrow/emprunt/'+vm.cardProduct+'/'+vm.cardProduct})
+// 			    			         
+// 			    			         .then(function (response) {
+// 			
+// 			    			                 $log.debug("la reponse emprunt");
+// 			
+// 			    			                 $log.debug(response);
+// 			
+// 			    			                 vm.deleteEnt = response.data[0].retour;
+// 			    			                 
+// 			    			                 vm.affichage= vm.deleteEnt+"\n Nom livre: "+value.nomCatalogue;
+// 			    			         
+// 			    			                 return vm.affichage;
+// 			
+// 			    			             });
+//     			     
     			 };
     			 
     }]);
