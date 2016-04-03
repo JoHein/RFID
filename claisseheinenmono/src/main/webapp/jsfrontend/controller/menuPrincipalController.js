@@ -194,7 +194,8 @@ angular.module('RFID')
     			 };
     			 
     			 $scope.emprunt = function(){
-    				 
+ 					 vm.affichage ="Présentez carte utilisateur";
+
     				 $http.get('/rest/readCard')
     				     .then(function (response) {
 			                 $log.debug("la reponse 1");
@@ -206,7 +207,9 @@ angular.module('RFID')
    	    				 var nextEpisode =$window.confirm("Emprunt pour User: "+  vm.UserInfo.nomUser+" "+vm.UserInfo.prenomUser+"?");
 
     				   
-			 				if(nextEpisode){     
+			 				if(nextEpisode){    
+			 					 vm.affichage ="Présentez livre";
+
     				    	$http.get('/rest/readCard')
     				    		 .then(function(response2){
 				                 $log.debug("la reponse 2");
@@ -224,6 +227,50 @@ angular.module('RFID')
 					 					 
 					 					  			$log.debug(response); 					 
 					 					 vm.affichage ="Emprunt enregistré";
+					 					 	
+					 					  		})
+					 				
+					 					}
+    				    		 })
+			 				}
+    				    		 
+			    		 })  			     
+    			 };
+    			 
+    			 $scope.retour = function(){
+ 					 vm.affichage ="Présentez carte utilisateur";
+
+    				 $http.get('/rest/readCard')
+    				     .then(function (response) {
+			                 $log.debug("la reponse 1");
+			                 $log.debug(response);
+
+			                 $log.debug(response.data[0]);
+
+   				    	  vm.UserInfo=response.data[0];
+   	    				 var nextEpisode =$window.confirm("Retour pour User: "+  vm.UserInfo.nomUser+" "+vm.UserInfo.prenomUser+"?");
+
+    				   
+			 				if(nextEpisode){   
+			 					 vm.affichage ="Présentez livre";
+
+    				    	$http.get('/rest/readCard')
+    				    		 .then(function(response2){
+				                 $log.debug("la reponse 2");
+				                 $log.debug(response2);
+	
+	    				    	 vm.cardProd= response2.data[0];
+    				    		 
+		  	    				 var nextFinalEpisode =$window.confirm("Validez retour pour User: "+  vm.UserInfo.nomUser+" "+vm.UserInfo.prenomUser+"\n Livre: "+vm.cardProd.nomCatalogue+"?");
+					 				if(nextFinalEpisode){     
+					 					  $http.post('/rest/manageBorrow/return/'+vm.UserInfo.uidUser+'/'+vm.cardProd.uidProduit) 					 
+					 					     				             
+					 					  		.then(function (response) {
+					 					 
+					 					  			$log.debug("la reponse retour");
+					 					 
+					 					  			$log.debug(response); 					 
+					 					 vm.affichage ="Retour enregistré";
 					 					 	
 					 					  		})
 					 				

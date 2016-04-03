@@ -41,14 +41,14 @@ public class Database {
                 this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser) VALUES ('" + uidProduit + "','" + uidUser + "')");
                 if (nbDispo > 0) nbDispo--;
             } else {
-                this.stmt.executeUpdate("DELETE FROM emprunt WHERE uidProduit = '" + uidProduit + "' AND uidUser = '" + uidUser + "')");
+                this.stmt.executeUpdate("DELETE FROM emprunt WHERE uidProduit = '" + uidProduit + "' AND uidUser = '" + uidUser + "'");
                 nbDispo++;
                 dispo = 1;
             }
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + " WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = '" + uidProduit + "')");
             this.stmt.executeUpdate("UPDATE stock SET dispo = " + dispo + " WHERE uidProduit = '" + uidProduit + "'");
-            return "[{\"retour\": \""+action+" OK\"}]"
-;
+            return "[{\"retour\": \""+action+" OK\"}]";
+            
         } else {
             return "[{\"retour\": \"Emprunt non ajouté car mauvaises cartes:\""+uidUser.length()+"\" et produit \""+uidProduit.length()+"\"}]";
           
