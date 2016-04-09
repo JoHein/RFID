@@ -141,6 +141,25 @@ public class Database {
         resList.put("Livres", listCat);
         return resList;
     }
+    
+    public JSONObject getBookByTitle(String search) throws SQLException, JSONException {
+        ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue where nomCatalogue like '%" + search + "%'");
+        JSONArray listCat = new JSONArray();
+        JSONObject resList = new JSONObject();
+
+        while (allCat.next()) {
+            JSONObject obj = new JSONObject();
+            obj.put("idCatalogue", allCat.getInt("idCatalogue"));
+            obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
+            obj.put("nbDispo", allCat.getInt("nbDispo"));
+            listCat.put(obj);
+        }
+        System.out.println("Database");
+        System.out.println(listCat);
+        resList.put("Livres", listCat);
+        return resList;
+    }
+
 
     public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");

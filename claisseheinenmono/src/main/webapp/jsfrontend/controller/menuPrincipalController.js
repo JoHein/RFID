@@ -34,12 +34,15 @@ angular.module('RFID')
     			             $log.debug(response);
 
 
+
     			             vm.Produit= response.data[0];
 
+    			             if(response.data==""){
+        			        	 vm.affichage="Opération annulée";
+        			         }
     			             callback(vm.Produit);
-
     			         });
-
+    			     
     			 }
 
     			 $scope.deleteEntUser = function(){
@@ -136,6 +139,7 @@ angular.module('RFID')
     			         $log.debug(data);
     			         $log.debug(value);
     			         
+    			         			         
     			         if(value.idStock | value.idUser){
     			        	 vm.affichage ="La carte existe déjà";
     			        	 return vm.affichage;
@@ -280,5 +284,25 @@ angular.module('RFID')
     				    		 
 			    		 })  			     
     			 };
+
     			 
+    			
+    			 $scope.getSearchBook = function(searchBook) {
+ 					$log.debug("SearchData : "+searchBook);
+
+ 					return $http.get('/rest/titleFind', {  
+ 						params:{
+ 								     search:searchBook
+ 						}
+ 				   }).then(function(response){
+ 						$log.debug("Response search : "+response.data.Livres[0].nomCatalogue);
+ 						$log.debug(response);
+
+ 				     return response.data.Livres;
+ 				   });
+ 				 };
+ 				 
+ 				 
+ 				 
+ 				     			 
     }]);

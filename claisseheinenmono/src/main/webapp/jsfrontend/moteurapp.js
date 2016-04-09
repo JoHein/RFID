@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('RFID', ['ui.router'])
+    .module('RFID', ['ui.router', 'ui.bootstrap'])
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state('read', {

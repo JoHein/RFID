@@ -15,6 +15,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -63,6 +64,21 @@ public class webservice {
         Database data = new Database();
         data.prepareToQuery();
         return data.getAllCatalogues();
+    }
+    
+    /*
+     * Lister les livres de la bibliotheque
+	 * 
+	 */
+
+    @Path("/titleFind")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject findByTitle(@QueryParam("search") String search) throws JSONException, SQLException {
+        Database data = new Database();
+        data.prepareToQuery();
+        System.out.println("Dans le servicce avec " + search);
+        return data.getBookByTitle(search);
     }
 
 	/*

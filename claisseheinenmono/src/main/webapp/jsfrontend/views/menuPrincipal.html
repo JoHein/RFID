@@ -88,18 +88,21 @@
 			
 			<button class="btn" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
 			<div data-ng-show="collapsed2">
-				<form novalidate class="form" action="">
-				
-					<input type="text" data-ng-model="data.idCatalogue" required>
-					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
+				<form class="form" action="">
+				<input type="text" class="search" ng-model="searchData"
+						placeholder="Enter book title"
+						uib-typeahead="book as book.nomCatalogue for book in getSearchBook($viewValue)"
+						class="form-control" required/> 
+						
+<!-- 					<input type="text" data-ng-model="data.idCatalogue" required> -->
+					<input type="submit" data-ng-click="addEntity(searchData.idCatalogue)" value="Enregistrer" />
 				
 				</form>
 			</div>
 			
 			<button class="btn" data-ng-click="emprunt()">Emprunt</button>
 			<button class="btn" data-ng-click="retour()">Retour</button>
-			
-			
+
 </section>
 
 
