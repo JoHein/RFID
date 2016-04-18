@@ -46,7 +46,7 @@ angular.module('RFID')
     			 }
 
     			 $scope.deleteEntUser = function(){
-    				 vm.affichage = "Présentez une carte User";
+    				 vm.affichage = "Suppression : Présentez une carte User";
     			     ScanCard(function(value){
 
     			         $log.debug("Dans rest");
@@ -86,7 +86,7 @@ angular.module('RFID')
     			 };
     			 
     			 $scope.deleteEntBook = function(){
-    				 vm.affichage = "Présentez une carte Book";
+    				 vm.affichage = "Suppression : Présentez une carte Book";
 
     			     ScanCard(function(value){
 
@@ -130,7 +130,7 @@ angular.module('RFID')
 
     			 
     			 $scope.addEntity = function(data){
-    				 vm.affichage = "Présentez une carte";
+    				 vm.affichage = "Ajout : Présentez une carte";
 		 
     				 ScanCard(function(value){
         				 $scope.data= {};
@@ -141,7 +141,7 @@ angular.module('RFID')
     			         
     			         			         
     			         if(value.idStock | value.idUser){
-    			        	 vm.affichage ="La carte existe déjà";
+    			        	 vm.affichage ="Ajout : La carte existe déjà";
     			        	 return vm.affichage;
     			         }else{
 
@@ -198,7 +198,7 @@ angular.module('RFID')
     			 };
     			 
     			 $scope.emprunt = function(){
- 					 vm.affichage ="Présentez carte utilisateur";
+ 					 vm.affichage ="Emprunt : Présentez carte utilisateur";
 
     				 $http.get('/rest/readCard')
     				     .then(function (response) {
@@ -212,7 +212,7 @@ angular.module('RFID')
 
     				   
 			 				if(nextEpisode){    
-			 					 vm.affichage ="Présentez livre";
+			 					 vm.affichage ="Emprunt : Présentez livre";
 
     				    	$http.get('/rest/readCard')
     				    		 .then(function(response2){
@@ -242,7 +242,7 @@ angular.module('RFID')
     			 };
     			 
     			 $scope.retour = function(){
- 					 vm.affichage ="Présentez carte utilisateur";
+ 					 vm.affichage ="Retour : Présentez carte utilisateur";
 
     				 $http.get('/rest/readCard')
     				     .then(function (response) {
@@ -256,7 +256,7 @@ angular.module('RFID')
 
     				   
 			 				if(nextEpisode){   
-			 					 vm.affichage ="Présentez livre";
+			 					 vm.affichage ="Retour : Présentez livre";
 
     				    	$http.get('/rest/readCard')
     				    		 .then(function(response2){

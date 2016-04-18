@@ -10,99 +10,127 @@
 
 	<h1>Administration Biblothèque</h1>
 
+<!-- Menu Affichage -->
 <section class="menuLeft">
 	<div class="affichage">
 		<h1 class="display">{{menuController.affichage}}</h1>
 	</div>
 
-	<div class="listeOeuvre">
-		<h3>Liste des oeuvres</h3>
-		<table>
+<div class="listeEmprunt">
+		<h3><span class="glyphicon glyphicon-share glyphicon glyphicon-book"></span> Liste des Emprunts</h3>
+		<table class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
+					<th>Etudiant</th>
 					<th>Oeuvre</th>
+					<th>Date</th>
+					
+				</tr>
+			</thead>
+				<tr data-ng-repeat="data in menuController.emprunt">
+					<td>{{data.nomUser}} {{data.prenomUser}}</td>
+					<td>{{data.titre}}</td>
+					<td>{{data.date}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="listeOeuvre">
+		<h3><span class="glyphicon glyphicon-book"></span> Liste des Oeuvres</h3>
+		<table class="table table-striped">
+			<tbody>
+			<thead>
+				<tr>
+					<th>Titre</th>
+					<th>Type</th>
+					<th>Catégorie<th>
 					<th>Disponible</th>
 				</tr>
 			</thead>
 				<tr data-ng-repeat="data in menuController.oeuvre">
 					<td>{{data.nomCatalogue}}</td>
+					<td>{{data.type}}</td>
+					<td>{{data.categorie}}</td>
 					<td>{{data.nbDispo}}</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-
-	<div class="listeEmprunt">
-		<h3>Liste des Emprunts</h3>
-		<table>
+<div class="listeEtudiant">
+		<h3><span class="glyphicon glyphicon-user"></span> Liste des Etudiants</h3>
+		<table class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
-					<th>Etudiant</th>
-					<th>Oeuvre</th>
+					<th>Nom</th>
+					<th>Prenom</th>
+					<th>Nombre d'emprunts</th>
+					
 				</tr>
 			</thead>
-				<tr data-ng-repeat="data in menuController.emprunt">
-					<td>Marcel Proust</td>
-					<td>Angular for the dummies</td>
+				<tr data-ng-repeat="data in menuController.etudiant">
+					<td></td>
+					<td></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 
-
-
-<!-- 	<div> -->
-<!-- 		<table> -->
-<!-- 			<tbody> -->
-<!-- 				<tr>Uidproduit: {{menuController.readCardInfo[0].uidProduit}}</tr> -->
-<!-- 				<tr>ID catalogue:{{menuController.readCardInfo[0].idCatalogue}}</tr> -->
-<!-- 				<tr>Nom catalogue: -->
-<!-- 					{{menuController.readCardInfo[0].nomCatalogue}} -->
-<!-- 				</tr> -->
-<!-- 				<tr>Disponibilité: {{menuController.readCardInfo[0].dispo}} -->
-<!-- 				</tr> -->
-<!-- 			</tbody> -->
-<!-- 		</table> -->
-<!-- 	</div> -->
-
 </section>
 
-
+<!-- Menu droit -->
 <section class="menuRight">
-			<button class="btn" data-ng-click="deleteEntUser()">Supprimer Utilisateur</button>
-			<button class="btn" data-ng-click="deleteEntBook()">Supprimer Livre</button>
+
+	<!-- Emprunt Retour -->
+
+		<h3>Gestion Emprunt</h3>
+		<hr>
+		<div>
 			
-			<button class="btn" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
-			<div data-ng-show="collapsed">
+			<button style="width:25%;" class="btn btn-primary btn-lg" data-ng-click="emprunt()">Emprunt</button>
+			<button style="width:24%;" class="btn btn-warning btn-lg" data-ng-click="retour()">Retour</button>
+		</div>
+	<!-- Ajout -->
+		
+		<h3>Administration</h3>
+		<hr>
+		<div>
+					
+			<button style="display:block;width:50%;" class="btn btn btn-info btn-lg" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
+			<div style="margin-top:0.3em;"data-ng-show="collapsed">
 				<form novalidate class="form" action="">
 				
 					<input type="text" data-ng-model="data.nom" placeholder="nom" required>
 					<input type="text" data-ng-model="data.prenom" placeholder="prenom" required>
-					<input type="submit" data-ng-click="addEntity(data)" value="Enregistrer" />
+					<input type="submit" class="btn btn-default" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>
 			</div>
 			
-			<button class="btn" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
-			<div data-ng-show="collapsed2">
+			<button style="display:block;width:50%; margin-top:0.3em;" class="btn btn-info btn-lg" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
+			<div style="margin-top:0.3em; data-ng-show="collapsed2">
 				<form class="form" action="">
-				<input type="text" class="search" ng-model="searchData"
-						placeholder="Enter book title"
-						uib-typeahead="book as book.nomCatalogue for book in getSearchBook($viewValue)"
-						class="form-control" required/> 
-						
-<!-- 					<input type="text" data-ng-model="data.idCatalogue" required> -->
-					<input type="submit" data-ng-click="addEntity(searchData.idCatalogue)" value="Enregistrer" />
+					<input type="text" class="search" ng-model="searchData"
+							placeholder="Enter book title"
+							uib-typeahead="book as book.nomCatalogue for book in getSearchBook($viewValue)"
+							class="form-control" required/> 	
+					<input type="submit" class="btn btn-default" data-ng-click="addEntity(searchData.idCatalogue)" value="Enregistrer" />
 				
 				</form>
 			</div>
-			
-			<button class="btn" data-ng-click="emprunt()">Emprunt</button>
-			<button class="btn" data-ng-click="retour()">Retour</button>
-
+		</div>
+		
+	<!-- Suppression -->
+		<h3>Suppression</h3>
+		<hr>
+		<div>
+			<button style="display:block; width:50%;" class="btn btn-danger btn-lg" data-ng-click="deleteEntUser()">Supprimer Utilisateur</button>
+			<button style="display:block; width:50%; margin-top:0.3em;" class="btn btn-danger btn-lg" data-ng-click="deleteEntBook()">Supprimer Livre</button>
+		</div>
 </section>
 
 

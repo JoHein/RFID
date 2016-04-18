@@ -8,24 +8,33 @@ body{
 
 .menuLeft{
 	float:left;
-	width:60%;
+	width:75%;
 }
 
 .affichage{
 	background:grey;
-	width:95%;
+	width:90%;
 	height:15em;
 	border: 1px solid black;
 }
 
+.listeEmprunt{
+	width:90%;
+}
+
 .listeOeuvre{
-	width:45%;
+	width:90%;
+}
+
+.listeEtudiant{
+	width:90%;
 }
 
 .menuRight{
-	width:40%;
+	width:25%;
 	float:right;
-}
+	margin-top:-1.7em;
+}s
 
 .form input.ng-invalid.ng-touched {
     background-color: #FA787E;
@@ -41,3 +50,10 @@ body{
 	font-size: 2em;
 	text-align: center;
 }
+
+hr{
+	margin-bottom:15px;
+	border: 0;
+ 	 border-top: 1px solid #d9d9d9;
+}
+
