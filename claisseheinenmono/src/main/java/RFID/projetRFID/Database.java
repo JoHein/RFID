@@ -20,6 +20,11 @@ public class Database {
     public Database() {
     }
 
+    /**
+     * <p>Connecte à la BDD et crée un statement</p>
+     * @throws SQLException
+     */
+
     public void prepareToQuery() throws SQLException {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -27,11 +32,20 @@ public class Database {
             e.printStackTrace();
         }
         //String url = "jdbc:mysql://localhost:3307/rfid";
-        String url = "jdbc:mysql://127.0.0.1:3307/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
         this.stmt = con.createStatement();
     }
+
+    /**
+     * <p>Permet de gérer les emprunts suivant une action</p>
+     * @param action : borrow ou return
+     * @param uidUser
+     * @param uidProduit
+     * @return
+     * @throws SQLException
+     */
 
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
@@ -47,13 +61,40 @@ public class Database {
             }
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + " WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = '" + uidProduit + "')");
             this.stmt.executeUpdate("UPDATE stock SET dispo = " + dispo + " WHERE uidProduit = '" + uidProduit + "'");
-            return "[{\"retour\": \""+action+" OK\"}]";
-            
+            return "[{\"retour\": \"" + action + " OK\"}]";
+
         } else {
-            return "[{\"retour\": \"Emprunt non ajouté car mauvaises cartes:\""+uidUser.length()+"\" et produit \""+uidProduit.length()+"\"}]";
-          
+            return "[{\"retour\": \"Emprunt non ajouté car mauvaises cartes:\"" + uidUser.length() + "\" et produit \"" + uidProduit.length() + "\"}]";
+
         }
     }
+
+    /**
+     * <p>Permet de gérer les catalogues suivant une action</p>
+     * @param action : create ou delete
+     * @param info : peut être soit un ID pour delete soit un nom pour create
+     * @return
+     * @throws SQLException
+     */
+
+    public String manageCatalogue(String action, String info) throws SQLException {
+        if (action.equals("create")) {
+            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,nbDispo,nbTotal) VALUES VALUES ('" + info + "','0','0')");
+        } else {
+            this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + info + "'");
+        }
+        return "[{\"retour\":\"" + action + " Catalogue OK\"}]";
+    }
+
+    /**
+     * <p>Ajouter une entité à la base</p>
+     * @param type : user ou product
+     * @param uid
+     * @param param1
+     * @param param2
+     * @return
+     * @throws SQLException
+     */
 
     public String addEntity(String type, String uid, String param1, String param2) throws SQLException {
         if (type.equals("user")) {
@@ -68,7 +109,7 @@ public class Database {
                 nbTotal = rs.getInt("nbTotal");
                 nbDispo = rs.getInt("nbDispo");
             }
-            if (param2.equals("1"))nbDispo++;
+            if (param2.equals("1")) nbDispo++;
             nbTotal++;
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal);
             return "[{\"retour\": \"Ajout Produit OK\"}]";
@@ -76,6 +117,13 @@ public class Database {
             return "[{\"retour\": \"Bad type\"}]";
         }
     }
+
+    /**
+     * <p>Récupérer le nombre de livres dispo pour un titre</p>
+     * @param uid
+     * @return
+     * @throws SQLException
+     */
 
     public int getNbDispo(String uid) throws SQLException {
         int idCatalogue = 0;
@@ -91,38 +139,52 @@ public class Database {
         return nbDispo;
     }
 
+    /**
+     * <p>Récupérer les données d'une carte passé</p>
+     * @param uid
+     * @return
+     * @throws SQLException
+     */
+
     public String getCardData(String uid) throws SQLException {
         String data = "";
         if (uid.length() == 8) {
-        	
+
             System.out.println("Carte produit détectée");
             // traitement carte produit
             Produit produit = this.getProduitStock(uid);
-            	if((produit.getUidProduits())==null){
-            		return "[{\"uidNew\": \""+uid+"\"}]";
-            	}
+            if ((produit.getUidProduits()) == null) {
+                return "[{\"uidNew\": \"" + uid + "\"}]";
+            }
             System.out.println(produit.toString());
             data = produit.toString();
             return data;
-            
+
         } else if (uid.length() == 14) {
-        	
+
             System.out.println("Carte user détectée");
             Database base = new Database();
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
-	            if((user.getUidUser())==null){
-	            	return "[{\"uidNew\": \""+uid+"\"}]";
-	            }
+            if ((user.getUidUser()) == null) {
+                return "[{\"uidNew\": \"" + uid + "\"}]";
+            }
             System.out.println(user.toString());
             data = user.toString();
             return data;
-            
+
         } else {
             System.out.println("Merci de passer une carte valide");
         }
         return data;
     }
+
+    /**
+     * <p>Récupérer tout les catalogues en base</p>
+     * @return
+     * @throws SQLException
+     * @throws JSONException
+     */
 
     public JSONObject getAllCatalogues() throws SQLException, JSONException {
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
@@ -141,7 +203,15 @@ public class Database {
         resList.put("Livres", listCat);
         return resList;
     }
-    
+
+    /**
+     * <p>Trouver un livre avec son titre</p>
+     * @param search
+     * @return
+     * @throws SQLException
+     * @throws JSONException
+     */
+
     public JSONObject getBookByTitle(String search) throws SQLException, JSONException {
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue where nomCatalogue like '%" + search + "%'");
         JSONArray listCat = new JSONArray();
@@ -160,6 +230,12 @@ public class Database {
         return resList;
     }
 
+    /**
+     * <p>Trouver un produit avec son UID</p>
+     * @param uid
+     * @return
+     * @throws SQLException
+     */
 
     public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
@@ -179,6 +255,13 @@ public class Database {
         return prod;
     }
 
+    /**
+     * Heu...
+     * @param uid
+     * @return
+     * @throws SQLException
+     */
+
     public User getProduitUser(String uid) throws SQLException {
         ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
         User user = new User();
@@ -191,6 +274,13 @@ public class Database {
         }
         return user;
     }
+
+    /**
+     * <p>Supprimer une entité de la base</p>
+     * @param uid
+     * @return
+     * @throws SQLException
+     */
 
     public String deleteEntity(String uid) throws SQLException {
         int idCatalogue = 0;
@@ -209,7 +299,7 @@ public class Database {
                 nbTotal = catalogues.getInt("nbTotal");
                 nbDispo = catalogues.getInt("nbDispo");
             }
-             
+
             nbTotal--;
             if (nbDispo > 0) {
                 nbDispo--;
@@ -217,10 +307,15 @@ public class Database {
             String nbDispoS = ", nbdispo = " + nbDispo;
             this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCatalogue = '" + idCatalogue + "'");
             this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
-            return"[{\"retour\": \"Delete livre OK\"}]";
+            return "[{\"retour\": \"Delete livre OK\"}]";
         }
         return "[{\"retour\": \"Delete \"}]";
     }
+
+    /**
+     * <p>Fermer une connexion</p>
+     * @throws SQLException
+     */
 
     public void closeConnection() throws SQLException {
         this.con.close();
