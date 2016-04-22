@@ -205,6 +205,32 @@ public class Database {
     }
 
     /**
+     * <p>Récupérer tout les users en base</p>
+     * @return
+     * @throws SQLException
+     * @throws JSONException
+     */
+
+    public JSONObject getAllUsers() throws SQLException, JSONException {
+        ResultSet allUsers = this.stmt.executeQuery("SELECT * FROM users");
+        JSONArray listUsers = new JSONArray();
+        JSONObject resList = new JSONObject();
+
+        while (allUsers.next()) {
+            JSONObject obj = new JSONObject();
+            obj.put("idUser", allUsers.getInt("idUser"));
+            obj.put("nomUser", allUsers.getString("nomUser"));
+            obj.put("prenomUser", allUsers.getString("prenomUser"));
+            obj.put("uidUser", allUsers.getString("uidUser"));
+            listUsers.put(obj);
+        }
+        System.out.println("Database");
+        System.out.println(listUsers);
+        resList.put("Users", listUsers);
+        return resList;
+    }
+
+    /**
      * <p>Trouver un livre avec son titre</p>
      * @param search
      * @return

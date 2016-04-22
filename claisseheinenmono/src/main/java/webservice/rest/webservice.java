@@ -67,6 +67,20 @@ public class webservice {
     }
 
     /**
+     * Lister les users de la bibliotheque
+     *
+     */
+
+    @Path("/allUser")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject allUsers() throws JSONException, SQLException {
+        Database data = new Database();
+        data.prepareToQuery();
+        return data.getAllUsers();
+    }
+
+    /**
      * Gérer les catalogues de la bibliotheque
 	 *
 	 */
