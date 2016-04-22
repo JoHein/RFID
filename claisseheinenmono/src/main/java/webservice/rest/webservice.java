@@ -31,9 +31,9 @@ import RFID.projetRFID.Produit;
 @Path("/")
 public class webservice {
 
-	/**
+    /**
      * Permet de lire et de retourner l'uid d'une carte
-	 */
+     */
 
     @Path("/readCard")
     @GET
@@ -45,17 +45,16 @@ public class webservice {
         System.out.println("uid de la carte :" + uid);
         Database db = new Database();
         db.prepareToQuery();
-        String data = db.getCardData(uid);    
+        String data = db.getCardData(uid);
         System.out.println(data);
         System.out.println(uid);
 
         return data;
     }
 
-	/**
+    /**
      * Lister les livres de la bibliotheque
-	 * 
-	 */
+     */
 
     @Path("/allCat")
     @GET
@@ -68,7 +67,6 @@ public class webservice {
 
     /**
      * Lister les users de la bibliotheque
-     *
      */
 
     @Path("/allUser")
@@ -82,13 +80,12 @@ public class webservice {
 
     /**
      * Gérer les catalogues de la bibliotheque
-	 *
-	 */
+     */
 
     @Path("/manageCat/{action}/{info}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String addCatalogue(@PathParam("action") String action,@PathParam("info") String info) throws JSONException, SQLException {
+    public String addCatalogue(@PathParam("action") String action, @PathParam("info") String info) throws JSONException, SQLException {
         if (action.equals("create") || action.equals("delete")) {
             Database db = new Database();
             db.prepareToQuery();
@@ -97,11 +94,10 @@ public class webservice {
             return "[{\"retour\": \"Action non reconnue\"}]";
         }
     }
-    
+
     /**
      * Trouver un livre à partir de son titre
-	 * 
-	 */
+     */
 
     @Path("/titleFind")
     @GET
@@ -113,14 +109,15 @@ public class webservice {
         return data.getBookByTitle(search);
     }
 
-	/**
+    /**
      * Ajout d'une Entity dans la bdd
+     *
      * @Param : entity = user ou product
      * @Param : data = JSON formaté dans CET ORDRE
      * Format du JSON : en premier (String)uid puis :
      * USER : (String)nom,(String)prenom
      * Produit : (String)idCatalogue,(String)dispo
-	 */
+     */
 
     @Path("/addEnt/{entity}/{uid}/{param1}/{param2}")
     @POST
@@ -129,18 +126,19 @@ public class webservice {
         Database db = new Database();
         db.prepareToQuery();
         System.out.println(uid.length());
-        if (uid.length() == 8 || uid.length()==14) {
-            return db.addEntity(entity, uid,param1, param2);
+        if (uid.length() == 8 || uid.length() == 14) {
+            return db.addEntity(entity, uid, param1, param2);
         } else {
             return "[{\"retour\": \"Taille de carte incorrecte\"}]";
-         
+
         }
     }
 
-	/**
+    /**
      * Supression d'une Entity de la base de donnée
+     *
      * @Param : UID de la carte de l'entité
-	 */
+     */
 
     @Path("/deleteEnt/{uid}")
     @DELETE
@@ -151,19 +149,42 @@ public class webservice {
         return db.deleteEntity(uid);
     }
 
+    /**
+     * Vérification de la présence d'une carte dans la base de donnée
+     *
+     * @Param uid : UID de la carte à tester
+     */
 
-	/**
+    @Path("/checkCard/{uid}")
+    @DELETE
+    public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
+        Database db = new Database();
+        db.prepareToQuery();
+        if (uid.length() == 14 || uid.length() == 8) {
+            if (db.isInDb(uid) == 0) {
+                return "[{\"retour\": \"Carte non présente\"}]";
+            } else if (db.isInDb(uid) == 1) {
+                return "[{\"retour\": \"Carte déjà présente\"}]";
+            } else {
+                return "[{\"retour\": \"Carte non reconnue\"}]";
+            }
+        }
+        return "[{\"retour\": \"Carte non valide\"}]";
+    }
+
+    /**
      * Modification de la table emprunt (ajout ou suppression) selon l'action réalisée
+     *
      * @Param : action = borrow ou return
      * @Param : uid = JSON avec uidUser et uidProduit
-	 */
+     */
 
     @Path("/manageBorrow/{action}/{uidUser}/{uidProduit}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String manageBorrow(@PathParam("action") String action, @PathParam("uidUser") String uidUser, @PathParam("uidProduit") String uidProduit) throws
             JSONException, SQLException {
-    	
+
         if (action.equals("borrow") || action.equals("return")) {
             Database db = new Database();
             db.prepareToQuery();

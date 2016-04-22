@@ -57,8 +57,41 @@ public class Database {
         return retour;
     }
 
+    /**
+     * <p>Permet de vérifier l'existence de choses en base</p>
+     * <p>Présence d'une carte user en base on passe user et UID de la carte</p>
+     * <p>Présence d'une carte livre en base on passe stock et UID de la carte</p>
+     *
+     * @param table : la table sur laquelle vérifier
+     * @param info  : la data à vérifier
+     * @return retour : 1 si en base, 0 si pas en base, -1 si pas bonne table
+     * @throws SQLException
+     */
+
+    public int isInDb(String table, String info) throws SQLException {
+        int retour = 10;
+        ResultSet rs;
+        ResultSetMetaData rsm;
+        switch (table) {
+            case "user":
+                rs = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + info + "'");
+                retour = rsm.getColumnCount(rs.getMetaData());
+                break;
+            case "stock":
+                rs = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + info + "'");
+                retour = rsm.getColumnCount(rs.getMetaData());
+                break;
+            default:
+                retour = -1;
+                break;
+        }
+        return retour;
+    }
+
+    /**
      * <p>Permet de gérer les emprunts suivant une action</p>
-     * @param action : borrow ou return
+     *
+     * @param action     : borrow ou return
      * @param uidUser
      * @param uidProduit
      * @return
@@ -67,6 +100,9 @@ public class Database {
 
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
+            if(this.isDispo(uidProduit) == 0){
+                return "[{\"retour\": \"Non Disponible\"}]";
+            }
             int nbDispo = this.getNbDispo(uidProduit);
             int dispo = 0;
             if (action.equals("borrow")) {
