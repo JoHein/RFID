@@ -22,6 +22,7 @@ public class Database {
 
     /**
      * <p>Connecte à la BDD et crée un statement</p>
+     *
      * @throws SQLException
      */
 
@@ -39,6 +40,23 @@ public class Database {
     }
 
     /**
+     * <p<Permet de vérifier la disponibilité d'un livre a partir de son UID
+     *
+     * @param uid : l'UID du livre
+     * @return retour : 0 si pas dispo, 1 si dispo
+     * @throws SQLException
+     */
+
+    public int isDispo(String uid) throws SQLException {
+        int retour;
+        ResultSet rs;
+        rs = this.stmt.executeQuery("SELECT dispo FROM stock WHERE uidProduit = '" + uid + "'");
+        while (rs.next()) {
+            retour = rs.getInt("dispo");
+        }
+        return retour;
+    }
+
      * <p>Permet de gérer les emprunts suivant une action</p>
      * @param action : borrow ou return
      * @param uidUser
@@ -71,8 +89,9 @@ public class Database {
 
     /**
      * <p>Permet de gérer les catalogues suivant une action</p>
+     *
      * @param action : create ou delete
-     * @param info : peut être soit un ID pour delete soit un nom pour create
+     * @param info   : peut être soit un ID pour delete soit un nom pour create
      * @return
      * @throws SQLException
      */
@@ -88,7 +107,8 @@ public class Database {
 
     /**
      * <p>Ajouter une entité à la base</p>
-     * @param type : user ou product
+     *
+     * @param type   : user ou product
      * @param uid
      * @param param1
      * @param param2
@@ -120,6 +140,7 @@ public class Database {
 
     /**
      * <p>Récupérer le nombre de livres dispo pour un titre</p>
+     *
      * @param uid
      * @return
      * @throws SQLException
@@ -141,6 +162,7 @@ public class Database {
 
     /**
      * <p>Récupérer les données d'une carte passé</p>
+     *
      * @param uid
      * @return
      * @throws SQLException
@@ -181,6 +203,7 @@ public class Database {
 
     /**
      * <p>Récupérer tout les catalogues en base</p>
+     *
      * @return
      * @throws SQLException
      * @throws JSONException
@@ -206,6 +229,7 @@ public class Database {
 
     /**
      * <p>Récupérer tout les users en base</p>
+     *
      * @return
      * @throws SQLException
      * @throws JSONException
@@ -232,6 +256,7 @@ public class Database {
 
     /**
      * <p>Trouver un livre avec son titre</p>
+     *
      * @param search
      * @return
      * @throws SQLException
@@ -258,6 +283,7 @@ public class Database {
 
     /**
      * <p>Trouver un produit avec son UID</p>
+     *
      * @param uid
      * @return
      * @throws SQLException
@@ -283,6 +309,7 @@ public class Database {
 
     /**
      * Heu...
+     *
      * @param uid
      * @return
      * @throws SQLException
@@ -303,6 +330,7 @@ public class Database {
 
     /**
      * <p>Supprimer une entité de la base</p>
+     *
      * @param uid
      * @return
      * @throws SQLException
@@ -340,6 +368,7 @@ public class Database {
 
     /**
      * <p>Fermer une connexion</p>
+     *
      * @throws SQLException
      */
 
