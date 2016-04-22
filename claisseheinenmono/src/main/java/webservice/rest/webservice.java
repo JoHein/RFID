@@ -31,7 +31,7 @@ import RFID.projetRFID.Produit;
 @Path("/")
 public class webservice {
 
-	/*
+	/**
      * Permet de lire et de retourner l'uid d'une carte
 	 */
 
@@ -52,7 +52,7 @@ public class webservice {
         return data;
     }
 
-	/*
+	/**
      * Lister les livres de la bibliotheque
 	 * 
 	 */
@@ -65,9 +65,27 @@ public class webservice {
         data.prepareToQuery();
         return data.getAllCatalogues();
     }
+
+    /**
+     * Gérer les catalogues de la bibliotheque
+	 *
+	 */
+
+    @Path("/manageCat/{action}/{info}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String addCatalogue(@PathParam("action") String action,@PathParam("info") String info) throws JSONException, SQLException {
+        if (action.equals("create") || action.equals("delete")) {
+            Database db = new Database();
+            db.prepareToQuery();
+            return db.manageCatalogue(action, info);
+        } else {
+            return "[{\"retour\": \"Action non reconnue\"}]";
+        }
+    }
     
-    /*
-     * Lister les livres de la bibliotheque
+    /**
+     * Trouver un livre à partir de son titre
 	 * 
 	 */
 
@@ -81,7 +99,7 @@ public class webservice {
         return data.getBookByTitle(search);
     }
 
-	/*
+	/**
      * Ajout d'une Entity dans la bdd
      * @Param : entity = user ou product
      * @Param : data = JSON formaté dans CET ORDRE
@@ -105,7 +123,7 @@ public class webservice {
         }
     }
 
-	/*
+	/**
      * Supression d'une Entity de la base de donnée
      * @Param : UID de la carte de l'entité
 	 */
@@ -120,7 +138,7 @@ public class webservice {
     }
 
 
-	/*
+	/**
      * Modification de la table emprunt (ajout ou suppression) selon l'action réalisée
      * @Param : action = borrow ou return
      * @Param : uid = JSON avec uidUser et uidProduit
