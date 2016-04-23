@@ -157,13 +157,16 @@ public class webservice {
 
     @Path("/checkCard/{uid}")
     @DELETE
-    public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
+    public String checkCardDB(@PathParam("uid") String uid) throws SQLException {
         Database db = new Database();
+        String table;
         db.prepareToQuery();
         if (uid.length() == 14 || uid.length() == 8) {
-            if (db.isInDb(uid) == 0) {
+            if (uid.length() == 14) table = "user";
+            else table = "stock";
+            if (db.isInDb(table, uid) == 0) {
                 return "[{\"retour\": \"Carte non présente\"}]";
-            } else if (db.isInDb(uid) == 1) {
+            } else if (db.isInDb(table, uid) == 1) {
                 return "[{\"retour\": \"Carte déjà présente\"}]";
             } else {
                 return "[{\"retour\": \"Carte non reconnue\"}]";

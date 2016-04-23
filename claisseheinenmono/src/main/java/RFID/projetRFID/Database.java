@@ -3,6 +3,7 @@ package RFID.projetRFID;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Database {
      */
 
     public int isDispo(String uid) throws SQLException {
-        int retour;
+        int retour=-1;
         ResultSet rs;
         rs = this.stmt.executeQuery("SELECT dispo FROM stock WHERE uidProduit = '" + uid + "'");
         while (rs.next()) {
@@ -75,11 +76,13 @@ public class Database {
         switch (table) {
             case "user":
                 rs = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + info + "'");
-                retour = rsm.getColumnCount(rs.getMetaData());
+                rsm = rs.getMetaData();
+                retour = rsm.getColumnCount();
                 break;
             case "stock":
                 rs = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + info + "'");
-                retour = rsm.getColumnCount(rs.getMetaData());
+                rsm = rs.getMetaData();
+                retour = rsm.getColumnCount();
                 break;
             default:
                 retour = -1;
@@ -100,7 +103,7 @@ public class Database {
 
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
-            if(this.isDispo(uidProduit) == 0){
+            if (this.isDispo(uidProduit) == 0) {
                 return "[{\"retour\": \"Non Disponible\"}]";
             }
             int nbDispo = this.getNbDispo(uidProduit);
@@ -133,9 +136,12 @@ public class Database {
      */
 
     public String manageCatalogue(String action, String info) throws SQLException {
+        System.out.println("action : "+action+" info : "+info);
         if (action.equals("create")) {
-            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,nbDispo,nbTotal) VALUES VALUES ('" + info + "','0','0')");
+            System.out.println("create");
+            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,nbDispo,nbTotal) VALUES ('" + info + "','0','0')");
         } else {
+            System.out.println("delete");
             this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + info + "'");
         }
         return "[{\"retour\":\"" + action + " Catalogue OK\"}]";
