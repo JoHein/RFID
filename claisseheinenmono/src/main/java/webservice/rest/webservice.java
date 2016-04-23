@@ -157,7 +157,7 @@ public class webservice {
 
     @Path("/checkCard/{uid}")
     @DELETE
-    public String deleteEntDB(@PathParam("uid") String uid) throws SQLException {
+    public String checkEntDB(@PathParam("uid") String uid) throws SQLException {
         Database db = new Database();
         db.prepareToQuery();
         if (uid.length() == 14 || uid.length() == 8) {
