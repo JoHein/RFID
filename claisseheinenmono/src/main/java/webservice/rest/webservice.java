@@ -156,7 +156,7 @@ public class webservice {
      */
 
     @Path("/checkCard/{uid}")
-    @DELETE
+    @POST
     public String checkCardDB(@PathParam("uid") String uid) throws SQLException {
         Database db = new Database();
         String table;
