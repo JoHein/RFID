@@ -82,19 +82,24 @@ public class webservice {
      * Gérer les catalogues de la bibliotheque
      */
 
-    @Path("/manageCat/{action}/{info}")
-    @GET
+    @Path("/manageCat/{action}/{idCatalogue}/{nomCatalogue}/{auteur}/{type}/{categorie}")
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public String addCatalogue(@PathParam("action") String action, @PathParam("info") String info) throws JSONException, SQLException {
-        if (action.equals("create") || action.equals("delete")) {
+    public String addCatalogue(@PathParam("action") String action, @PathParam("idCatalogue")Integer idCatalogue ,@PathParam("nomCatalogue") String nomCatalogue,@PathParam("auteur") String auteur,
+    		@PathParam("type") String type,@PathParam("categorie") String categorie) throws JSONException, SQLException {
+    	
+        if (action.equals("Création") || action.equals("Suppression")) {
             Database db = new Database();
             db.prepareToQuery();
-            return db.manageCatalogue(action, info);
+            return db.manageCatalogue(action, idCatalogue, nomCatalogue, auteur, type, categorie);
         } else {
             return "[{\"retour\": \"Action non reconnue\"}]";
         }
     }
 
+    
+    
+    
     /**
      * Trouver un livre à partir de son titre
      */

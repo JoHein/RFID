@@ -10,14 +10,35 @@ angular.module('RFID')
     			 $http.get('/rest/allCat')
 		          .then(function (data) {
 		              $log.debug(data);
-		              vm.oeuvre= data.data.Livres;
+		              vm.oeuvre=[];
+		              vm.oeuvre.push(data.data.Livres);
 		              $log.debug(data.data.Livres);
 
-		              
+		              $log.debug(vm.oeuvre);
+
 		              $log.debug("la reponse");
 
-		              $log.debug(vm.oeuvre[0].nomCatalogue);
+		              $log.debug(vm.oeuvre[0][0].nomCatalogue);
+		              $log.debug(vm.oeuvre[0][1].nomCatalogue);
+
 		          });
+    			 
+    				
+    			 $http.get('/rest/allUser')
+		          .then(function (data) {
+		              $log.debug(data);
+		              vm.users=[];
+		              vm.users.push(data.data.Users);
+		              $log.debug(data.data.Users);
+
+		              $log.debug(vm.users);
+
+		              $log.debug("la reponse");
+
+
+		          });
+   			 
+
    			 
 
     			 function ScanCard(callback) {
@@ -303,6 +324,56 @@ angular.module('RFID')
  				 };
  				 
  				 
+/*********************************************************************************************************************************************************/
  				 
- 				     			 
+ 				 $scope.addOeuvre = function(data){
+    				 $scope.data= {};
+
+    				 $http.post('/rest/manageCat/Création/0/'+data.nomCatalogue+'/'+data.auteur+'/'+data.type+'/'+data.categorie+'')
+    				 .then(function(response){
+		                 $log.debug("la reponse addOeuvre");
+		                 $log.debug(response);
+	    				 vm.affichage = "Ajout Oeuvre : "+data.nomCatalogue+"\n"+response.data[0].retour;
+
+		                 /*
+		                  * ajouter a vm.oeuvre l'ajout
+		                  */
+		            	 vm.oeuvre[0].push(data);
+	    				 
+	    				 var nbDispo = 0;
+	    				 data.nbDispo = nbDispo;
+	    				 
+		                 $log.debug(data);
+
+		                 $log.debug(vm.oeuvre);
+
+    				 });
+ 				 
+ 				 }
+
+    			 $scope.deleteOeuvre = function(data){
+			         var deleteOeuvre =$window.confirm("Êtes-vous sur de vouloir supprimer l'oeuvre : "+data.nomCatalogue+"?");
+		 				if(deleteOeuvre){
+    				 $http.post('/rest/manageCat/Suppression/'+data.idCatalogue+'/'+data.nomCatalogue+'/'+data.auteur+'/'+data.type+'/'+data.categorie+'')
+    				 .then(function(response){
+		                 $log.debug("la reponse deleteOeuvre");
+		                 $log.debug(response);
+	    				 vm.affichage = "Suppresion Oeuvre : "+data.nomCatalogue+" " +
+	    				 		""+response.data[0].retour;
+
+		                 /*
+		                  * Suppresion dans vm.oeuvre l'array affiché de l'oeuvre
+		                  */
+	    			    				 
+		                 $log.debug(data);
+
+		                 $log.debug(vm.oeuvre);
+    				 
+    			 });
+		 				}else{
+		    				 vm.affichage = "Suppresion Oeuvre : Annulée";
+		 				}
+    			 }   	
+    			 
+    			 
     }]);

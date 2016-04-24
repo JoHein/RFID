@@ -135,14 +135,14 @@ public class Database {
      * @throws SQLException
      */
 
-    public String manageCatalogue(String action, String info) throws SQLException {
-        System.out.println("action : "+action+" info : "+info);
-        if (action.equals("create")) {
+    public String manageCatalogue(String action, Integer idCatalogue, String nomCatalogue, String auteur, String type, String categorie) throws SQLException {
+        System.out.println("action : "+action+" titre : "+nomCatalogue);
+        if (action.equals("Création")) {
             System.out.println("create");
-            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,nbDispo,nbTotal) VALUES ('" + info + "','0','0')");
+            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES ('" + nomCatalogue + "','" + auteur + "','0','0','" + type + "','" + categorie + "')");
         } else {
-            System.out.println("delete");
-            this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + info + "'");
+            System.out.println("Suppression");
+            this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
         }
         return "[{\"retour\":\"" + action + " Catalogue OK\"}]";
     }
@@ -261,6 +261,10 @@ public class Database {
             obj.put("idCatalogue", allCat.getInt("idCatalogue"));
             obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
             obj.put("nbDispo", allCat.getInt("nbDispo"));
+            obj.put("auteur", allCat.getString("auteur"));
+            obj.put("type", allCat.getString("type"));
+            obj.put("categorie", allCat.getString("categorie"));
+
             listCat.put(obj);
         }
         System.out.println("Database");
@@ -315,6 +319,10 @@ public class Database {
             obj.put("idCatalogue", allCat.getInt("idCatalogue"));
             obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
             obj.put("nbDispo", allCat.getInt("nbDispo"));
+            obj.put("auteur", allCat.getString("auteur"));
+            obj.put("type", allCat.getString("type"));
+            obj.put("categorie", allCat.getString("categorie"));
+            
             listCat.put(obj);
         }
         System.out.println("Database");
