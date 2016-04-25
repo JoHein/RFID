@@ -79,6 +79,19 @@ public class webservice {
     }
 
     /**
+     * Lister les emprunts de la bibliotheque
+     */
+
+    @Path("/allBorrow")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject allBorrow() throws JSONException, SQLException {
+        Database data = new Database();
+        data.prepareToQuery();
+        return data.getAllBorrow();
+    }
+
+    /**
      * Gérer les catalogues de la bibliotheque
      */
 

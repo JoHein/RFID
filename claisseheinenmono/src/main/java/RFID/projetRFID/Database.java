@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -49,7 +51,7 @@ public class Database {
      */
 
     public int isDispo(String uid) throws SQLException {
-        int retour=-1;
+        int retour = -1;
         ResultSet rs;
         rs = this.stmt.executeQuery("SELECT dispo FROM stock WHERE uidProduit = '" + uid + "'");
         while (rs.next()) {
@@ -104,12 +106,15 @@ public class Database {
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
             if (this.isDispo(uidProduit) == 0) {
+                System.out.println(uidProduit + " non dispo");
                 return "[{\"retour\": \"Non Disponible\"}]";
             }
             int nbDispo = this.getNbDispo(uidProduit);
             int dispo = 0;
             if (action.equals("borrow")) {
-                this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser) VALUES ('" + uidProduit + "','" + uidUser + "')");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String date = sdf.format(new Date());
+                this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 if (nbDispo > 0) nbDispo--;
             } else {
                 this.stmt.executeUpdate("DELETE FROM emprunt WHERE uidProduit = '" + uidProduit + "' AND uidUser = '" + uidUser + "'");
@@ -136,7 +141,7 @@ public class Database {
      */
 
     public String manageCatalogue(String action, Integer idCatalogue, String nomCatalogue, String auteur, String type, String categorie) throws SQLException {
-        System.out.println("action : "+action+" titre : "+nomCatalogue);
+        System.out.println("action : " + action + " titre : " + nomCatalogue);
         if (action.equals("Création")) {
             System.out.println("create");
             this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES ('" + nomCatalogue + "','" + auteur + "','0','0','" + type + "','" + categorie + "')");
@@ -274,6 +279,64 @@ public class Database {
     }
 
     /**
+     * <p>Récupérer tout les emprunts en base</p>
+     *
+     * @return
+     * @throws SQLException
+     * @throws JSONException
+     */
+
+    public JSONObject getAllBorrow() throws SQLException, JSONException {
+        ResultSet allBorrow = this.stmt.executeQuery("SELECT * FROM emprunt");
+        ArrayList<Emprunt> borrow = new ArrayList<Emprunt>();
+        ResultSet allUser;
+        ResultSet allProduit;
+        ResultSet allCatalogue;
+        JSONArray listBorrow = new JSONArray();
+        JSONObject resList = new JSONObject();
+
+        while (allBorrow.next()) {
+            Emprunt emp = new Emprunt();
+            emp.idEmprunt = allBorrow.getInt("idEmprunt");
+            emp.uidUser = allBorrow.getString("uidUser");
+            emp.uidProduit = allBorrow.getString("uidProduit");
+            emp.dateEmprunt = allBorrow.getString("dateEmprunt");
+            borrow.put(emp);
+        }
+        System.out.println(borrow);
+
+/*
+        String etudiant = "";
+        String oeuvre = "";
+        int idCatalogue = 0;
+        allUser = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser LIKE '" + uidUser + "'");
+        while (allUser.next()) {
+            etudiant = allUser.getString("nomUser") + " " + allUser.getString("prenomUser");
+        }
+        allProduit = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit LIKE '" + uidProduit + "'");
+        while (allProduit.next()) {
+            idCatalogue = allProduit.getInt("idCatalogue");
+        }
+        allCatalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue LIKE '" + idCatalogue + "'");
+        while (allCatalogue.next()) {
+            oeuvre = allCatalogue.getString("nomCatalogue");
+        }
+        JSONObject obj = new JSONObject();
+        obj.put("idEmprunt", idEmprunt);
+        obj.put("etudiant", etudiant);
+        obj.put("oeuvre", oeuvre);
+        obj.put("dateEmprunt", dateEmprunt);
+        listBorrow.put(obj);
+        System.out.println(listBorrow);
+
+        System.out.println("Database");
+
+        resList.put("Emprunt", listBorrow);
+        return resList;
+        */
+    }
+
+    /**
      * <p>Récupérer tout les users en base</p>
      *
      * @return
@@ -322,7 +385,7 @@ public class Database {
             obj.put("auteur", allCat.getString("auteur"));
             obj.put("type", allCat.getString("type"));
             obj.put("categorie", allCat.getString("categorie"));
-            
+
             listCat.put(obj);
         }
         System.out.println("Database");
