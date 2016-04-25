@@ -105,15 +105,16 @@ public class Database {
 
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
-            if (this.isDispo(uidProduit) == 0) {
-                System.out.println(uidProduit + " non dispo");
-                return "[{\"retour\": \"Non Disponible\"}]";
-            }
             int nbDispo = this.getNbDispo(uidProduit);
             int dispo = 0;
             if (action.equals("borrow")) {
+                if (this.isDispo(uidProduit) == 0) {
+                    System.out.println(uidProduit + " non dispo");
+                    return "[{\"retour\": \"Non Disponible\"}]";
+                }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
+                System.out.println("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 if (nbDispo > 0) nbDispo--;
             } else {
@@ -265,6 +266,7 @@ public class Database {
             JSONObject obj = new JSONObject();
             obj.put("idCatalogue", allCat.getInt("idCatalogue"));
             obj.put("nomCatalogue", allCat.getString("nomCatalogue"));
+            obj.put("nbTotal", allCat.getInt("nbTotal"));
             obj.put("nbDispo", allCat.getInt("nbDispo"));
             obj.put("auteur", allCat.getString("auteur"));
             obj.put("type", allCat.getString("type"));
@@ -301,39 +303,35 @@ public class Database {
             emp.uidUser = allBorrow.getString("uidUser");
             emp.uidProduit = allBorrow.getString("uidProduit");
             emp.dateEmprunt = allBorrow.getString("dateEmprunt");
-            borrow.put(emp);
+            borrow.add(emp);
         }
-        System.out.println(borrow);
-
-/*
-        String etudiant = "";
-        String oeuvre = "";
-        int idCatalogue = 0;
-        allUser = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser LIKE '" + uidUser + "'");
-        while (allUser.next()) {
-            etudiant = allUser.getString("nomUser") + " " + allUser.getString("prenomUser");
+        for (Emprunt emp : borrow) {
+            String etudiant = "";
+            String oeuvre = "";
+            int idCatalogue = 0;
+            allUser = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'");
+            while (allUser.next()) {
+                etudiant = allUser.getString("nomUser") + " " + allUser.getString("prenomUser");
+            }
+            allProduit = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit LIKE '" + emp.uidProduit + "'");
+            while (allProduit.next()) {
+                idCatalogue = allProduit.getInt("idCatalogue");
+            }
+            allCatalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue LIKE '" + idCatalogue + "'");
+            while (allCatalogue.next()) {
+                oeuvre = allCatalogue.getString("nomCatalogue");
+            }
+            JSONObject obj = new JSONObject();
+            obj.put("idEmprunt", emp.idEmprunt);
+            obj.put("etudiant", etudiant);
+            obj.put("nomCatalogue", oeuvre);
+            obj.put("date", emp.dateEmprunt);
+            listBorrow.put(obj);
         }
-        allProduit = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit LIKE '" + uidProduit + "'");
-        while (allProduit.next()) {
-            idCatalogue = allProduit.getInt("idCatalogue");
-        }
-        allCatalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue LIKE '" + idCatalogue + "'");
-        while (allCatalogue.next()) {
-            oeuvre = allCatalogue.getString("nomCatalogue");
-        }
-        JSONObject obj = new JSONObject();
-        obj.put("idEmprunt", idEmprunt);
-        obj.put("etudiant", etudiant);
-        obj.put("oeuvre", oeuvre);
-        obj.put("dateEmprunt", dateEmprunt);
-        listBorrow.put(obj);
-        System.out.println(listBorrow);
-
         System.out.println("Database");
-
+        System.out.println(listBorrow);
         resList.put("Emprunt", listBorrow);
         return resList;
-        */
     }
 
     /**
@@ -346,17 +344,37 @@ public class Database {
 
     public JSONObject getAllUsers() throws SQLException, JSONException {
         ResultSet allUsers = this.stmt.executeQuery("SELECT * FROM users");
+        ResultSet nbEmprunt;
+        ArrayList<User> users = new ArrayList<User>();
         JSONArray listUsers = new JSONArray();
         JSONObject resList = new JSONObject();
 
         while (allUsers.next()) {
+            User usr = new User();
+            usr.idUser = allUsers.getInt("idUser");
+            usr.nomUser = allUsers.getString("nomUser");
+            usr.prenomUser = allUsers.getString("prenomUser");
+            usr.uidUser = allUsers.getString("uidUser");
+            users.add(usr);
+        }
+        System.out.println(users);
+
+        for (User usr : users) {
+            int nbEmp = 0;
+            System.out.println("TEST");
+            nbEmprunt = this.stmt.executeQuery("SELECT * FROM emprunt WHERE uidUser LIKE '" + usr.uidUser + "'");
+            while(nbEmprunt.next()){
+                nbEmp ++;
+            }
             JSONObject obj = new JSONObject();
-            obj.put("idUser", allUsers.getInt("idUser"));
-            obj.put("nomUser", allUsers.getString("nomUser"));
-            obj.put("prenomUser", allUsers.getString("prenomUser"));
-            obj.put("uidUser", allUsers.getString("uidUser"));
+            obj.put("iduser", usr.idUser);
+            obj.put("nomUser", usr.nomUser);
+            obj.put("prenomUser", usr.prenomUser);
+            obj.put("uidUser", usr.uidUser);
+            obj.put("nbEmprunt", nbEmp);
             listUsers.put(obj);
         }
+
         System.out.println("Database");
         System.out.println(listUsers);
         resList.put("Users", listUsers);
