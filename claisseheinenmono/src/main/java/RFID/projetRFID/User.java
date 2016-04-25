@@ -17,6 +17,11 @@ public class User {
         this.uidUser = uidUser;
     }
 
+    /**
+     *
+     * @return classe User formatée en JSON
+     */
+
     public String toString() {
         String json = "[{\"idUser\" : " + this.idUser +",\"nomUser\":\"" + this.nomUser +"\",\"prenomUser\":\"" + this.prenomUser +"\",\"uidUser\":\"" + this.uidUser + "\"}]";
         return json;

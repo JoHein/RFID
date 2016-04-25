@@ -18,6 +18,14 @@ public class Lecteur {
     private static CardTerminal terminal;
     static Database db = new Database();
 
+    /**
+     * <p>Ouverture d'une connection afin de lire une carte</p>
+     *
+     * @return
+     * @throws CardException
+     * @throws SQLException
+     */
+
     public String openConnection() throws CardException, SQLException {
         TerminalFactory factory = TerminalFactory.getDefault();
         CardTerminals cardterminals = factory.terminals();
@@ -32,6 +40,12 @@ public class Lecteur {
         String data = waitForCard();
         return data;
     }
+
+    /**
+     * <p>Affichage coté serveur lors de la lecture d'une carte (pour les test)</p>
+     *
+     * @throws CardException
+     */
 
     public static void affichage() throws CardException {
         System.out.println("Card detected!");
@@ -49,6 +63,13 @@ public class Lecteur {
         System.out.println();
     }
 
+    /**
+     * <p>Récupération et formatage de l'UID de la carte lue </p>
+     *
+     * @return
+     * @throws CardException
+     */
+
     public static String getCardData() throws CardException {
         String uid = "";
         byte[] cmdApduGetCardUid = new byte[]{(byte) 0xFF, (byte) 0xCA, (byte) 0x00, (byte) 0x00, (byte) 0x00};
@@ -64,6 +85,10 @@ public class Lecteur {
         return uid;
     }
 
+    /**
+     * <p>Déconnexion du terminal de lecture</p>
+     */
+
     public static void disconnect() {
         try {
             card.disconnect(true);
@@ -71,6 +96,14 @@ public class Lecteur {
             e.printStackTrace();
         }
     }
+
+    /**
+     * <p>Boucle pour initier la lecture d'une carte</p>
+     *
+     * @return
+     * @throws CardException
+     * @throws SQLException
+     */
 
     public static String waitForCard() throws CardException, SQLException {
         while (terminal.waitForCardPresent(5000)) {
@@ -94,17 +127,5 @@ public class Lecteur {
             }
         }
         return "";
-    }
-
-    public static Produit productCardProcess(String uid) throws SQLException {
-        db.prepareToQuery();
-        Produit prod = db.getProduitStock(uid);
-        return prod;
-    }
-
-    public static User userCardProcess(String uid) throws SQLException {
-        db.prepareToQuery();
-        User utilisateur = db.getProduitUser(uid);
-        return utilisateur;
     }
 }

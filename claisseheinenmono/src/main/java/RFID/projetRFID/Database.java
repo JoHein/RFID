@@ -358,7 +358,7 @@ public class Database {
     }
 
     /**
-     * Heu...
+     * <p>Trouver un user avec son UID</p>
      *
      * @param uid
      * @return

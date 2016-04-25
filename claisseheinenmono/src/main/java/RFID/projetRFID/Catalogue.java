@@ -13,6 +13,11 @@ public class Catalogue {
 		this.nbDispo=nbDispo;
 	}
 
+	/**
+	 *
+	 * @return classe Catalogue formatée en JSON
+     */
+
     public String toString() {
         String json = "[{\"idCatalogue\" : " + this.idCatalogue +
                 ",\"nomCatalogue\":\"" + this.nomCatalogue +
