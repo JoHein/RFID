@@ -97,9 +97,6 @@ public class webservice {
         }
     }
 
-    
-    
-    
     /**
      * Trouver un livre à partir de son titre
      */
@@ -192,7 +189,6 @@ public class webservice {
     @Consumes(MediaType.APPLICATION_JSON)
     public String manageBorrow(@PathParam("action") String action, @PathParam("uidUser") String uidUser, @PathParam("uidProduit") String uidProduit) throws
             JSONException, SQLException {
-
         if (action.equals("borrow") || action.equals("return")) {
             Database db = new Database();
             db.prepareToQuery();

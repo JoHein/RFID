@@ -12,14 +12,11 @@ public class Catalogue {
 		this.nomCatalogue = nomCatalogue;
 		this.nbDispo=nbDispo;
 	}
-	
-	
-	
+
     public String toString() {
         String json = "[{\"idCatalogue\" : " + this.idCatalogue +
                 ",\"nomCatalogue\":\"" + this.nomCatalogue +
                 "\",\"dispo\":" + this.nbDispo + "}]";
-    
 		return json;
     }
 
