@@ -179,7 +179,7 @@ public class Database {
             }
             if (param2.equals("1")) nbDispo++;
             nbTotal++;
-            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal);
+            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal + " WHERE idCatalogue LIKE " + param1);
             return "[{\"retour\": \"Ajout Produit OK\"}]";
         } else {
             return "[{\"retour\": \"Bad type\"}]";
@@ -363,8 +363,8 @@ public class Database {
             int nbEmp = 0;
             System.out.println("TEST");
             nbEmprunt = this.stmt.executeQuery("SELECT * FROM emprunt WHERE uidUser LIKE '" + usr.uidUser + "'");
-            while(nbEmprunt.next()){
-                nbEmp ++;
+            while (nbEmprunt.next()) {
+                nbEmp++;
             }
             JSONObject obj = new JSONObject();
             obj.put("iduser", usr.idUser);
