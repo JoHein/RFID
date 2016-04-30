@@ -95,7 +95,7 @@ angular.module('RFID')
                         $log.debug("function delete");
                         var deleteUser = $window.confirm("Etes vous sur de vouloir supprimer cette utilisateur ?");
                         if (deleteUser) {
-                            if ((value.uidUser).length == 14) {
+                            if (value.uidUser != undefined) {
 
                                 $http({method: 'delete', url: '/rest/deleteEnt/' + value.uidUser})
 
@@ -162,7 +162,7 @@ angular.module('RFID')
                         $log.debug("function delete");
                         var deleteUser = $window.confirm("Etes vous sur de vouloir supprimer ce livre ?");
                         if (deleteUser) {
-                            if ((value.uidProduit).length == 8) {
+                            if (value.uidProduit != undefined) {
 
                                 $http({method: 'delete', url: '/rest/deleteEnt/' + value.uidProduit})
 
