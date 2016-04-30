@@ -108,8 +108,31 @@ angular.module('RFID')
                                         vm.deleteEnt = response.data[0].retour;
 
                                         vm.affichage = vm.deleteEnt + "\n User: " + value.nomUser + " " + value.prenomUser;
+                                        
+                                        $http.get('/rest/allBorrow')
+                                        .then(function (data) {
+                                            vm.emprunts = [];
+                                            vm.emprunts.push(data.data.Emprunt);
 
-                                        return vm.affichage;
+                                            
+                                            $http.get('/rest/allCat')
+                                            .then(function (data) {
+                                                vm.oeuvre = [];
+                                                vm.oeuvre.push(data.data.Livres);
+
+
+                                                $http.get('/rest/allUser')
+                                                    .then(function (data) {
+                                                        vm.users = [];
+                                                        vm.users.push(data.data.Users);
+
+                                                    });
+
+                                            });
+
+
+                                        });
+
 
                                     })
                             } else {
@@ -153,7 +176,30 @@ angular.module('RFID')
 
                                         vm.affichage = vm.deleteEnt + "\n Nom livre: " + value.nomCatalogue;
 
-                                        return vm.affichage;
+                                        $http.get('/rest/allBorrow')
+                                        .then(function (data) {
+                                            vm.emprunts = [];
+                                            vm.emprunts.push(data.data.Emprunt);
+
+                                            
+                                            $http.get('/rest/allCat')
+                                            .then(function (data) {
+                                                vm.oeuvre = [];
+                                                vm.oeuvre.push(data.data.Livres);
+
+
+                                                $http.get('/rest/allUser')
+                                                    .then(function (data) {
+                                                        vm.users = [];
+                                                        vm.users.push(data.data.Users);
+
+                                                    });
+
+                                            });
+
+
+                                        });
+
 
                                     })
 
@@ -201,17 +247,40 @@ angular.module('RFID')
 
                                         $log.debug(response);
 
-
                                         vm.affichage = response.data[0].retour;
 
-                                        return vm.affichage;
+                                        $http.get('/rest/allBorrow')
+                                        .then(function (data) {
+                                            vm.emprunts = [];
+                                            vm.emprunts.push(data.data.Emprunt);
+
+                                            
+                                            $http.get('/rest/allCat')
+                                            .then(function (data) {
+                                                vm.oeuvre = [];
+                                                vm.oeuvre.push(data.data.Livres);
+
+
+                                                $http.get('/rest/allUser')
+                                                    .then(function (data) {
+                                                        vm.users = [];
+                                                        vm.users.push(data.data.Users);
+
+                                                    });
+
+                                            });
+
+
+                                        });
+
 
                                     })
                             } else if ((value.uidNew).length < 10) {
                                 $log.debug("Else if");
 
-                                data.uid = value.uidNew;
-                                data.dispo = 1;
+                                $log.debug(value);
+                                $log.debug(data);
+
 
                                 $log.debug("data apres ajout");
 
@@ -219,7 +288,7 @@ angular.module('RFID')
 
                                 $http({
                                     method: 'post',
-                                    url: '/rest/addEnt/product/' + data.uid + '/' + data.idCatalogue + '/1'
+                                    url: '/rest/addEnt/product/' + value.uidNew + '/' + data + '/1'
                                 })
 
                                     .then(function (response) {
@@ -233,7 +302,29 @@ angular.module('RFID')
 
                                         vm.affichage = response.data[0].retour;
 
-                                        return vm.affichage;
+                                        $http.get('/rest/allBorrow')
+                                        .then(function (data) {
+                                            vm.emprunts = [];
+                                            vm.emprunts.push(data.data.Emprunt);
+
+                                            
+                                            $http.get('/rest/allCat')
+                                            .then(function (data) {
+                                                vm.oeuvre = [];
+                                                vm.oeuvre.push(data.data.Livres);
+
+
+                                                $http.get('/rest/allUser')
+                                                    .then(function (data) {
+                                                        vm.users = [];
+                                                        vm.users.push(data.data.Users);
+
+                                                    });
+
+                                            });
+
+
+                                        });
 
                                     })
                             } else {
