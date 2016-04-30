@@ -167,7 +167,7 @@ public class Database {
     public String addEntity(String type, String uid, String param1, String param2) throws SQLException {
         if (type.equals("user")) {
             this.stmt.executeUpdate("INSERT INTO users (nomUser,prenomUser,uidUser) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
-            return "[{\"retour\": \"Ajout User OK\"}]";
+            return "[{\"retour\": \"Ajout Utilisateur OK\"}]";
         } else if (type.equals("product")) {
             this.stmt.executeUpdate("INSERT INTO stock (idCatalogue,dispo,uidProduit) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
             ResultSet rs = this.stmt.executeQuery("SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = '" + param1 + "'");
@@ -182,7 +182,7 @@ public class Database {
             this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal + " WHERE idCatalogue LIKE " + param1);
             return "[{\"retour\": \"Ajout Produit OK\"}]";
         } else {
-            return "[{\"retour\": \"Bad type\"}]";
+            return "[{\"retour\": \"Mauvais type\"}]";
         }
     }
 
@@ -232,7 +232,7 @@ public class Database {
 
         } else if (uid.length() == 14) {
 
-            System.out.println("Carte user détectée");
+            System.out.println("Carte utilisateur détectée");
             Database base = new Database();
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
@@ -473,7 +473,7 @@ public class Database {
         int nbDispo = 0;
         if (uid.length() == 14) {
             this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
-            return "[{\"retour\": \"Delete utilisateur OK\"}]";
+            return "[{\"retour\": \"Suppression utilisateur OK\"}]";
         } else if (uid.length() == 8) {
             ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
             while (produits.next()) {
@@ -492,9 +492,9 @@ public class Database {
             String nbDispoS = ", nbdispo = " + nbDispo;
             this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCatalogue = '" + idCatalogue + "'");
             this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
-            return "[{\"retour\": \"Delete livre OK\"}]";
+            return "[{\"retour\": \"Suppression livre OK\"}]";
         }
-        return "[{\"retour\": \"Delete \"}]";
+        return "[{\"retour\": \"Suppression \"}]";
     }
 
     /**
