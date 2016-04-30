@@ -5,12 +5,17 @@ angular.module('RFID')
         ['$rootScope', '$scope', '$http', '$stateParams', '$timeout', '$location', '$log', '$window',
             function ($rootScope, $scope, $http, $stateParams, $timeout, $location, $log, $window) {
                 var vm = this;
+                
+                /****Affichage lancement**************************************************************************************************************************/
+
 
                 $http.get('/rest/allBorrow')
                     .then(function (data) {
                         $log.debug(data);
                         vm.emprunts = [];
                         vm.emprunts.push(data.data.Emprunt);
+                        $log.debug("log emprunt");
+
                         $log.debug(data.data.Emprunt);
                         $log.debug(vm.emprunts);
                         $log.debug("la reponse");
@@ -22,6 +27,8 @@ angular.module('RFID')
                         $log.debug(data);
                         vm.oeuvre = [];
                         vm.oeuvre.push(data.data.Livres);
+                        $log.debug("log catalogue");
+
                         $log.debug(data.data.Livres);
 
                         $log.debug(vm.oeuvre);
@@ -39,11 +46,15 @@ angular.module('RFID')
                         $log.debug(data);
                         vm.users = [];
                         vm.users.push(data.data.Users);
+                        $log.debug("log user");
                         $log.debug(data.data.Users);
                         $log.debug(vm.users);
                         $log.debug("la reponse");
 
                     });
+
+                
+                /****Scan carte**************************************************************************************************************************/
 
 
                 function ScanCard(callback) {
@@ -69,6 +80,9 @@ angular.module('RFID')
                         });
 
                 }
+                
+                /****Suppression User**************************************************************************************************************************/
+
 
                 $scope.deleteEntUser = function () {
                     vm.affichage = "Suppression : Présentez une carte User";
@@ -79,7 +93,7 @@ angular.module('RFID')
                         $log.debug(value.uidUser);
 
                         $log.debug("function delete");
-                        var deleteUser = $window.confirm("Are you sure you want to delete this user?");
+                        var deleteUser = $window.confirm("Are you sure you want to delete this user ?");
                         if (deleteUser) {
                             if ((value.uidUser).length == 14) {
 
@@ -109,6 +123,9 @@ angular.module('RFID')
                     });
 
                 };
+                
+                /****Suppression Livre**************************************************************************************************************************/
+
 
                 $scope.deleteEntBook = function () {
                     vm.affichage = "Suppression : Présentez une carte Book";
@@ -120,7 +137,7 @@ angular.module('RFID')
                         $log.debug(value.uidProduit);
 
                         $log.debug("function delete");
-                        var deleteUser = $window.confirm("Are you sure you want to delete this book?");
+                        var deleteUser = $window.confirm("Are you sure you want to delete this book ?");
                         if (deleteUser) {
                             if ((value.uidProduit).length == 8) {
 
@@ -152,6 +169,7 @@ angular.module('RFID')
 
                 };
 
+                /****Ajout**************************************************************************************************************************/
 
                 $scope.addEntity = function (data) {
                     vm.affichage = "Ajout : Présentez une carte";
@@ -226,6 +244,8 @@ angular.module('RFID')
                     });
 
                 };
+                
+                /****Emprunt**************************************************************************************************************************/
 
                 $scope.emprunt = function () {
                     vm.affichage = "Emprunt : Présentez carte utilisateur";
@@ -238,7 +258,7 @@ angular.module('RFID')
                             $log.debug(response.data[0]);
 
                             vm.UserInfo = response.data[0];
-                            var nextEpisode = $window.confirm("Emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "?");
+                            var nextEpisode = $window.confirm("Emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
 
 
                             if (nextEpisode) {
@@ -251,25 +271,53 @@ angular.module('RFID')
 
                                         vm.cardProd = response2.data[0];
 
-                                        var nextFinalEpisode = $window.confirm("Validez emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + "?");
+                                        var nextFinalEpisode = $window.confirm("Validez emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
                                         if (nextFinalEpisode) {
-                                            $http.post('/rest/manageBorrow/borrow/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
+                                            $http.post('/rest/manageBorrow/Emprunt/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
 
                                                 .then(function (response) {
 
                                                     $log.debug("la reponse emprunt");
 
                                                     $log.debug(response);
-                                                    vm.affichage = "Emprunt enregistré";
+                                                    vm.affichage = vm.cardProd.nomCatalogue +" : "+ response.data[0].retour;
+                                                    
+                                                    $http.get('/rest/allBorrow')
+                                                    .then(function (data) {
+                                                        vm.emprunts = [];
+                                                        vm.emprunts.push(data.data.Emprunt);
 
-                                                })
+                                                        
+                                                        $http.get('/rest/allCat')
+                                                        .then(function (data) {
+                                                            vm.oeuvre = [];
+                                                            vm.oeuvre.push(data.data.Livres);
+
+
+                                                            $http.get('/rest/allUser')
+                                                                .then(function (data) {
+                                                                    vm.users = [];
+                                                                    vm.users.push(data.data.Users);
+
+                                                                });
+
+                                                        });
+
+
+                                                    });
+
+                                                });
 
                                         }
                                     })
                             }
 
                         })
+
                 };
+                
+                /****Retour**************************************************************************************************************************/
+
 
                 $scope.retour = function () {
                     vm.affichage = "Retour : Présentez carte utilisateur";
@@ -282,7 +330,7 @@ angular.module('RFID')
                             $log.debug(response.data[0]);
 
                             vm.UserInfo = response.data[0];
-                            var nextEpisode = $window.confirm("Retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "?");
+                            var nextEpisode = $window.confirm("Retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
 
 
                             if (nextEpisode) {
@@ -295,18 +343,38 @@ angular.module('RFID')
 
                                         vm.cardProd = response2.data[0];
 
-                                        var nextFinalEpisode = $window.confirm("Validez retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + "?");
+                                        var nextFinalEpisode = $window.confirm("Validez retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
                                         if (nextFinalEpisode) {
-                                            $http.post('/rest/manageBorrow/return/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
+                                            $http.post('/rest/manageBorrow/Retour/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
 
                                                 .then(function (response) {
 
                                                     $log.debug("la reponse retour");
 
                                                     $log.debug(response);
-                                                    vm.affichage = "Retour enregistré";
+                                                    vm.affichage = vm.cardProd.nomCatalogue + " : " +response.data[0].retour;
 
-                                                })
+                                                    $http.get('/rest/allBorrow')
+                                                    .then(function (data) {
+                                                        vm.emprunts = [];
+                                                        vm.emprunts.push(data.data.Emprunt);
+
+                                                        $http.get('/rest/allCat')
+                                                        .then(function (data) {
+                                                            vm.oeuvre = [];
+                                                            vm.oeuvre.push(data.data.Livres);
+     
+
+                                                            $http.get('/rest/allUser')
+                                                                .then(function (data) {
+                                                                    vm.users = [];
+                                                                    vm.users.push(data.data.Users);
+
+                                                                });
+                                                        });
+
+                                                    });
+                                                });                     
 
                                         }
                                     })
@@ -314,7 +382,9 @@ angular.module('RFID')
 
                         })
                 };
+                
 
+                /****Search**************************************************************************************************************************/
 
                 $scope.getSearchBook = function (searchBook) {
                     $log.debug("SearchData : " + searchBook);
@@ -332,7 +402,7 @@ angular.module('RFID')
                 };
 
 
-                /*********************************************************************************************************************************************************/
+                /****Oeuvre**************************************************************************************************************************/
 
                 $scope.addOeuvre = function (data) {
                     $scope.data = {};
@@ -360,7 +430,7 @@ angular.module('RFID')
                 }
 
                 $scope.deleteOeuvre = function (data) {
-                    var deleteOeuvre = $window.confirm("Êtes-vous sur de vouloir supprimer l'oeuvre : " + data.nomCatalogue + "?");
+                    var deleteOeuvre = $window.confirm("Êtes-vous sur de vouloir supprimer l'oeuvre : " + data.nomCatalogue + " ?");
                     if (deleteOeuvre) {
                         $http.post('/rest/manageCat/Suppression/' + data.idCatalogue + '/' + data.nomCatalogue + '/' + data.auteur + '/' + data.type + '/' + data.categorie + '')
                             .then(function (response) {
@@ -383,5 +453,7 @@ angular.module('RFID')
                     }
                 }
 
+                
+                
 
             }]);

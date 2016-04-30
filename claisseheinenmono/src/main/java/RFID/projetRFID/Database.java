@@ -107,7 +107,7 @@ public class Database {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
             int nbDispo = this.getNbDispo(uidProduit);
             int dispo = 0;
-            if (action.equals("borrow")) {
+            if (action.equals("Emprunt")) {
                 if (this.isDispo(uidProduit) == 0) {
                     System.out.println(uidProduit + " non dispo");
                     return "[{\"retour\": \"Non Disponible\"}]";

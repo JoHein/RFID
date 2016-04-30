@@ -202,7 +202,7 @@ public class webservice {
     @Consumes(MediaType.APPLICATION_JSON)
     public String manageBorrow(@PathParam("action") String action, @PathParam("uidUser") String uidUser, @PathParam("uidProduit") String uidProduit) throws
             JSONException, SQLException {
-        if (action.equals("borrow") || action.equals("return")) {
+        if (action.equals("Emprunt") || action.equals("Retour")) {
             Database db = new Database();
             db.prepareToQuery();
             return db.manageBorrow(action, uidUser, uidProduit);
