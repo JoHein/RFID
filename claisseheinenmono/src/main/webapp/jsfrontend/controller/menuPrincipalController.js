@@ -506,14 +506,26 @@ angular.module('RFID')
                             /*
                              * ajouter a vm.oeuvre l'ajout
                              */
-                            vm.oeuvre[0].push(data);
+                            $http.get('/rest/allBorrow')
+                            .then(function (data) {
+                                vm.emprunts = [];
+                                vm.emprunts.push(data.data.Emprunt);
 
-                            var nbDispo = 0;
-                            data.nbDispo = nbDispo;
+                                $http.get('/rest/allCat')
+                                .then(function (data) {
+                                    vm.oeuvre = [];
+                                    vm.oeuvre.push(data.data.Livres);
 
-                            $log.debug(data);
 
-                            $log.debug(vm.oeuvre);
+                                    $http.get('/rest/allUser')
+                                        .then(function (data) {
+                                            vm.users = [];
+                                            vm.users.push(data.data.Users);
+
+                                        });
+                                });
+
+                            });
 
                         });
 
@@ -532,11 +544,26 @@ angular.module('RFID')
                                 /*
                                  * Suppresion dans vm.oeuvre l'array affiché de l'oeuvre
                                  */
+                                $http.get('/rest/allBorrow')
+                                .then(function (data) {
+                                    vm.emprunts = [];
+                                    vm.emprunts.push(data.data.Emprunt);
 
-                                $log.debug(data);
+                                    $http.get('/rest/allCat')
+                                    .then(function (data) {
+                                        vm.oeuvre = [];
+                                        vm.oeuvre.push(data.data.Livres);
 
-                                $log.debug(vm.oeuvre);
 
+                                        $http.get('/rest/allUser')
+                                            .then(function (data) {
+                                                vm.users = [];
+                                                vm.users.push(data.data.Users);
+
+                                            });
+                                    });
+
+                                });
                             });
                     } else {
                         vm.affichage = "Suppresion Oeuvre : Annulée";
