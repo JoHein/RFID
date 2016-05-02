@@ -107,7 +107,7 @@ angular.module('RFID')
 
                                         vm.deleteEnt = response.data[0].retour;
 
-                                        vm.affichage = vm.deleteEnt + "\n User: " + value.nomUser + " " + value.prenomUser;
+                                        vm.affichage = vm.deleteEnt + "\n User : " + value.nomUser + " " + value.prenomUser;
                                         
                                         $http.get('/rest/allBorrow')
                                         .then(function (data) {
