@@ -94,8 +94,8 @@
 		<hr>
 		<div>
 			
-			<button style="width:40%;" class="btn btn-primary btn-lg" data-ng-click="emprunt()">Emprunt</button>
-			<button style="width:40%;" class="btn btn-warning btn-lg" data-ng-click="retour()">Retour</button>
+			<button style="width:49%;" class="btn btn-primary btn-lg" data-ng-click="emprunt()">Emprunt</button>
+			<button style="width:49%;" class="btn btn-warning btn-lg" data-ng-click="retour()">Retour</button>
 		</div>
 	<!-- Ajout -->
 		
@@ -103,30 +103,33 @@
 		<hr>
 		<div>
 					
-			<button style="display:block;width:60%;" class="btn btn btn-info btn-lg" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
+			<button style="display:block;width:100%;" class="btn btn btn-info btn-lg" data-ng-click="collapsed=!collapsed">Ajouter Utilisateur</button>
 			<div style="margin-top:0.3em;"data-ng-show="collapsed">
 				<form class="form-inline" novalidate action="">
 				
 					<input type="text" data-ng-model="data.nom" placeholder="nom" required>
+					<br>
 					<input type="text" data-ng-model="data.prenom" placeholder="prenom" required>
-					<input type="submit" class="btn btn-default" data-ng-click="addEntity(data)" value="Enregistrer" />
+					<br>
+					<input style="margin-top:0.3em;" type="submit" class="btn btn-default" data-ng-click="addEntity(data)" value="Enregistrer" />
 				
 				</form>
 			</div>
 			
-			<button style="display:block;width:60%; margin-top:0.3em;" class="btn btn-info btn-lg" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
+			<button style="display:block;width:100%; margin-top:0.3em;" class="btn btn-info btn-lg" data-ng-click="collapsed2=!collapsed2">Ajouter Livre</button>
 			<div style="margin-top:0.3em;" data-ng-show="collapsed2">
 				<form class="form-inline"  novalidate action="">
 					<input type="text" class="search" ng-model="searchData"
 							placeholder="Titre du livre"
 							uib-typeahead="book as book.nomCatalogue for book in getSearchBook($viewValue)"
 							class="form-control" required/> 	
-					<input type="submit" class="btn btn-default" data-ng-click="addEntity(searchData.idCatalogue)" value="Enregistrer" />
+							<br>
+					<input style="margin-top:0.3em;" type="submit" class="btn btn-default" data-ng-click="addEntity(searchData.idCatalogue)" value="Enregistrer" />
 				
 				</form>
 			</div>
 			
-			<button style="display:block;width:60%; margin-top:0.3em;" class="btn btn-info btn-lg" data-ng-click="collapsed3=!collapsed3">Ajouter Oeuvre</button>
+			<button style="display:block;width:100%; margin-top:0.3em;" class="btn btn-info btn-lg" data-ng-click="collapsed3=!collapsed3">Ajouter Oeuvre</button>
 			<div style="margin-top:0.3em;" data-ng-show="collapsed3">
 				<form class="form-inline"  novalidate action="">
 					
@@ -152,10 +155,10 @@
 		<h3>Suppression</h3>
 		<hr>
 		<div>
-			<button style="display:block; width:60%;" class="btn btn-danger btn-lg" data-ng-click="deleteEntUser()">Supprimer Utilisateur</button>
-			<button style="display:block; width:60%; margin-top:0.3em;" class="btn btn-danger btn-lg" data-ng-click="deleteEntBook()">Supprimer Livre</button>
+			<button style="display:block; width:100%;" class="btn btn-danger btn-lg" data-ng-click="deleteEntUser()">Supprimer Utilisateur</button>
+			<button style="display:block; width:100%; margin-top:0.3em;" class="btn btn-danger btn-lg" data-ng-click="deleteEntBook()">Supprimer Livre</button>
 			
-			<button style="display:block; width:60%; margin-top:0.3em;" class="btn btn-danger btn-lg" data-ng-click="collapsed4=!collapsed4">Supprimer Oeuvre</button>
+			<button style="display:block; width:100%; margin-top:0.3em;" class="btn btn-danger btn-lg" data-ng-click="collapsed4=!collapsed4">Supprimer Oeuvre</button>
 				<div style="margin-top:0.3em;" data-ng-show="collapsed4">
 					<form class="form-inline" novalidate action="">
 						
@@ -163,7 +166,8 @@
 								placeholder="Titre de l'oeuvre"
 								uib-typeahead="book as book.nomCatalogue for book in getSearchBook($viewValue)"
 								class="form-control" required/> 	
-						<input type="submit" class="btn btn-default" data-ng-click="deleteOeuvre(searchData)" value="Suppression" />
+								<br>
+						<input style="margin-top:0.3em;" type="submit" class="btn btn-default" data-ng-click="deleteOeuvre(searchData)" value="Suppression" />
 						
 					</form>
 				</div>
