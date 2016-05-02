@@ -72,31 +72,44 @@ public class Database {
      */
 
     public int isInDb(String table, String info) throws SQLException {
-        int retour = 10;
+        int retour = -1;
         ResultSet rs;
-        ResultSetMetaData rsm;
+        String sql = "";
         switch (table) {
             case "user":
                 rs = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + info + "'");
-                rsm = rs.getMetaData();
-                retour = rsm.getColumnCount();
+                rs.last();
+                retour = rs.getRow();
+                rs.beforeFirst();
                 break;
             case "stock":
                 rs = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + info + "'");
-                rsm = rs.getMetaData();
-                retour = rsm.getColumnCount();
+                rs.last();
+                retour = rs.getRow();
+                rs.beforeFirst();
                 break;
             case "emprunt":
                 String data = "";
                 if (info.length() == 14) data = "uidUser";
                 else if (info.length() == 8) data = "uidProduit";
-                else data = "idCatalogue";
-                System.out.println (data);
-                String sql = "SELECT * FROM emprunt WHERE " + data + " = '" + info + "'";
-                System.out.println (sql);
+                else break;
+                //System.out.println (data);
+                sql = "SELECT * FROM emprunt WHERE " + data + " = '" + info + "'";
+                System.out.println(sql);
                 rs = this.stmt.executeQuery(sql);
-                rsm = rs.getMetaData();
-                retour = rsm.getColumnCount();
+                rs.last();
+                retour = rs.getRow();
+                rs.beforeFirst();
+                System.out.println(retour);
+                break;
+            case "empruntOeuvre":
+                sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = '"+info+"')";
+                System.out.println(sql);
+                rs = this.stmt.executeQuery(sql);
+                rs.last();
+                retour = rs.getRow();
+                rs.beforeFirst();
+                System.out.println(retour);
                 break;
             default:
                 retour = -1;
@@ -121,12 +134,12 @@ public class Database {
             int dispo = 0;
             if (action.equals("Emprunt")) {
                 if (this.isDispo(uidProduit) == 0) {
-                    System.out.println(uidProduit + " non dispo");
+                    //System.out.println(uidProduit + " non dispo");
                     return "[{\"retour\": \"Non Disponible\"}]";
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
-                System.out.println("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
+                //System.out.println("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 if (nbDispo > 0) nbDispo--;
             } else {
@@ -154,13 +167,12 @@ public class Database {
      */
 
     public String manageCatalogue(String action, Integer idCatalogue, String nomCatalogue, String auteur, String type, String categorie) throws SQLException {
-        System.out.println("action : " + action + " titre : " + nomCatalogue);
+        //System.out.println("action : " + action + " titre : " + nomCatalogue);
         if (action.equals("Création")) {
-            System.out.println("create");
             this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES ('" + nomCatalogue + "','" + auteur + "','0','0','" + type + "','" + categorie + "')");
         } else {
-            System.out.println("Suppression");
-            if(this.isInDb("emprunt","\""+idCatalogue+"\"") == 1) return "[{\"retour\": \"Oeuvre dans Emprunt\"}]";
+            if (this.isInDb("empruntOeuvre", Integer.toString(idCatalogue)) >= 1)
+                return "[{\"retour\": \"Oeuvre dans Emprunt\"}]";
             this.stmt.executeUpdate("DELETE FROM stock WHERE idCatalogue = '" + idCatalogue + "'");
             this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
         }
@@ -234,31 +246,31 @@ public class Database {
         String data = "";
         if (uid.length() == 8) {
 
-            System.out.println("Carte produit détectée");
+            //System.out.println("Carte produit détectée");
             // traitement carte produit
             Produit produit = this.getProduitStock(uid);
             if ((produit.getUidProduits()) == null) {
                 return "[{\"uidNew\": \"" + uid + "\"}]";
             }
-            System.out.println(produit.toString());
+            //System.out.println(produit.toString());
             data = produit.toString();
             return data;
 
         } else if (uid.length() == 14) {
 
-            System.out.println("Carte utilisateur détectée");
+            //System.out.println("Carte utilisateur détectée");
             Database base = new Database();
             base.prepareToQuery();
             User user = base.getProduitUser(uid);
             if ((user.getUidUser()) == null) {
                 return "[{\"uidNew\": \"" + uid + "\"}]";
             }
-            System.out.println(user.toString());
+            //System.out.println(user.toString());
             data = user.toString();
             return data;
 
         } else {
-            System.out.println("Merci de passer une carte valide");
+            //System.out.println("Merci de passer une carte valide");
         }
         return data;
     }
@@ -288,8 +300,8 @@ public class Database {
 
             listCat.put(obj);
         }
-        System.out.println("Database");
-        System.out.println(listCat);
+        //System.out.println("Database");
+        //System.out.println(listCat);
         resList.put("Livres", listCat);
         return resList;
     }
@@ -342,8 +354,8 @@ public class Database {
             obj.put("date", emp.dateEmprunt);
             listBorrow.put(obj);
         }
-        System.out.println("Database");
-        System.out.println(listBorrow);
+        //System.out.println("Database");
+        //System.out.println(listBorrow);
         resList.put("Emprunt", listBorrow);
         return resList;
     }
@@ -371,11 +383,10 @@ public class Database {
             usr.uidUser = allUsers.getString("uidUser");
             users.add(usr);
         }
-        System.out.println(users);
+        //System.out.println(users);
 
         for (User usr : users) {
             int nbEmp = 0;
-            System.out.println("TEST");
             nbEmprunt = this.stmt.executeQuery("SELECT * FROM emprunt WHERE uidUser LIKE '" + usr.uidUser + "'");
             while (nbEmprunt.next()) {
                 nbEmp++;
@@ -389,8 +400,8 @@ public class Database {
             listUsers.put(obj);
         }
 
-        System.out.println("Database");
-        System.out.println(listUsers);
+        //System.out.println("Database");
+        //System.out.println(listUsers);
         resList.put("Users", listUsers);
         return resList;
     }
@@ -420,8 +431,8 @@ public class Database {
 
             listCat.put(obj);
         }
-        System.out.println("Database");
-        System.out.println(listCat);
+        //System.out.println("Database");
+        //System.out.println(listCat);
         resList.put("Livres", listCat);
         return resList;
     }
@@ -433,7 +444,6 @@ public class Database {
      * @return
      * @throws SQLException
      */
-
     public Produit getProduitStock(String uid) throws SQLException {
         ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
         Produit prod = new Produit();
@@ -486,13 +496,13 @@ public class Database {
         int nbTotal = 0;
         int nbDispo = 0;
         if (uid.length() == 14) {
-            if(this.isInDb("emprunt",uid) == 1) return "[{\"retour\": \"User dans Emprunt\"}]";
-            if(this.isInDb("user",uid) == 0) return "[{\"retour\": \"User pas dans la database\"}]";
+            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"User dans Emprunt\"}]";
+            if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"User pas dans la database\"}]";
             this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
             return "[{\"retour\": \"Suppression utilisateur OK\"}]";
         } else if (uid.length() == 8) {
-            if(this.isInDb("emprunt",uid) == 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
-            if(this.isInDb("user",uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
+            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
+            if (this.isInDb("produit", uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
             ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
             while (produits.next()) {
                 idCatalogue = produits.getInt("idCatalogue");
