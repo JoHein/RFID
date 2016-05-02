@@ -43,7 +43,7 @@ public class Database {
     }
 
     /**
-     * <p>Permet de vérifier la disponibilité d'un livre a partir de son UID</p> 
+     * <p>Permet de vérifier la disponibilité d'un livre a partir de son UID</p>
      *
      * @param uid : l'UID du livre
      * @return retour : 0 si pas dispo, 1 si dispo
@@ -83,6 +83,18 @@ public class Database {
                 break;
             case "stock":
                 rs = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + info + "'");
+                rsm = rs.getMetaData();
+                retour = rsm.getColumnCount();
+                break;
+            case "emprunt":
+                String data = "";
+                if (info.length() == 14) data = "uidUser";
+                else if (info.length() == 8) data = "uidProduit";
+                else data = "idCatalogue";
+                System.out.println (data);
+                String sql = "SELECT * FROM emprunt WHERE " + data + " = '" + info + "'";
+                System.out.println (sql);
+                rs = this.stmt.executeQuery(sql);
                 rsm = rs.getMetaData();
                 retour = rsm.getColumnCount();
                 break;
@@ -135,8 +147,8 @@ public class Database {
     /**
      * <p>Permet de gérer les catalogues suivant une action</p>
      *
-     * @param action : create ou delete
-     * @param idCatalogue   : ID du catalogue
+     * @param action      : create ou delete
+     * @param idCatalogue : ID du catalogue
      * @return
      * @throws SQLException
      */
@@ -148,6 +160,8 @@ public class Database {
             this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES ('" + nomCatalogue + "','" + auteur + "','0','0','" + type + "','" + categorie + "')");
         } else {
             System.out.println("Suppression");
+            if(this.isInDb("emprunt","\""+idCatalogue+"\"") == 1) return "[{\"retour\": \"Oeuvre dans Emprunt\"}]";
+            this.stmt.executeUpdate("DELETE FROM stock WHERE idCatalogue = '" + idCatalogue + "'");
             this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
         }
         return "[{\"retour\":\"" + action + " Catalogue OK\"}]";
@@ -472,9 +486,13 @@ public class Database {
         int nbTotal = 0;
         int nbDispo = 0;
         if (uid.length() == 14) {
+            if(this.isInDb("emprunt",uid) == 1) return "[{\"retour\": \"User dans Emprunt\"}]";
+            if(this.isInDb("user",uid) == 0) return "[{\"retour\": \"User pas dans la database\"}]";
             this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
             return "[{\"retour\": \"Suppression utilisateur OK\"}]";
         } else if (uid.length() == 8) {
+            if(this.isInDb("emprunt",uid) == 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
+            if(this.isInDb("user",uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
             ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
             while (produits.next()) {
                 idCatalogue = produits.getInt("idCatalogue");
