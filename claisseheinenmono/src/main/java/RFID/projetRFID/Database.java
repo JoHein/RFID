@@ -43,7 +43,7 @@ public class Database {
     }
 
     /**
-     * <p<Permet de vérifier la disponibilité d'un livre a partir de son UID
+     * <p>Permet de vérifier la disponibilité d'un livre a partir de son UID</p> 
      *
      * @param uid : l'UID du livre
      * @return retour : 0 si pas dispo, 1 si dispo
