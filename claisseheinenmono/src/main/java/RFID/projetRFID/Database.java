@@ -136,7 +136,7 @@ public class Database {
      * <p>Permet de gérer les catalogues suivant une action</p>
      *
      * @param action : create ou delete
-     * @param info   : peut être soit un ID pour delete soit un nom pour create
+     * @param idCatalogue   : ID du catalogue
      * @return
      * @throws SQLException
      */

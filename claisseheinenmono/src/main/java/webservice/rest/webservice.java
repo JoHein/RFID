@@ -93,6 +93,13 @@ public class webservice {
 
     /**
      * Gérer les catalogues de la bibliotheque
+     * @param action : création ou suppression
+     * @param idCatalogue : id du catalogue
+     * @param nomCatalogue : nom du catalogue
+     * @param auteur : auteur de l'ouvrage juste le nom
+     * @param type : le type du livre Roman, Biographie, Science-fiction
+     * @param categorie : pour préciser le type exemple anticipation
+
      */
 
     @Path("/manageCat/{action}/{idCatalogue}/{nomCatalogue}/{auteur}/{type}/{categorie}")
@@ -112,6 +119,7 @@ public class webservice {
 
     /**
      * Trouver un livre à partir de son titre
+     * @param search : String d'une partie du nom d'un livre
      */
 
     @Path("/titleFind")
@@ -127,8 +135,8 @@ public class webservice {
     /**
      * Ajout d'une Entity dans la bdd
      *
-     * @Param : entity = user ou product
-     * @Param : data = JSON formaté dans CET ORDRE
+     * @param entity : entity = user ou product
+     * @param uid : uid du livre ou de l'utilisateur
      * Format du JSON : en premier (String)uid puis :
      * USER : (String)nom,(String)prenom
      * Produit : (String)idCatalogue,(String)dispo
@@ -152,7 +160,7 @@ public class webservice {
     /**
      * Supression d'une Entity de la base de donnée
      *
-     * @Param : UID de la carte de l'entité
+     * @param uid : UID de la carte de l'entité
      */
 
     @Path("/deleteEnt/{uid}")
@@ -167,7 +175,7 @@ public class webservice {
     /**
      * Vérification de la présence d'une carte dans la base de donnée
      *
-     * @Param uid : UID de la carte à tester
+     * @param uid : UID de la carte à tester
      */
 
     @Path("/checkCard/{uid}")
@@ -193,8 +201,8 @@ public class webservice {
     /**
      * Modification de la table emprunt (ajout ou suppression) selon l'action réalisée
      *
-     * @Param : action = borrow ou return
-     * @Param : uid = JSON avec uidUser et uidProduit
+     * @param  action : action = borrow ou return
+     * @param uidUser : uid = JSON avec uidUser et uidProduit
      */
 
     @Path("/manageBorrow/{action}/{uidUser}/{uidProduit}")
