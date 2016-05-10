@@ -33,6 +33,7 @@ public class webservice {
 
     /**
      * Permet de lire et de retourner l'uid d'une carte
+     * 
      */
 
     @Path("/readCard")
@@ -54,6 +55,7 @@ public class webservice {
 
     /**
      * Lister les livres de la bibliotheque
+     * 
      */
 
     @Path("/allCat")
@@ -99,7 +101,6 @@ public class webservice {
      * @param auteur : auteur de l'ouvrage juste le nom
      * @param type : le type du livre Roman, Biographie, Science-fiction
      * @param categorie : pour préciser le type exemple anticipation
-
      */
 
     @Path("/manageCat/{action}/{idCatalogue}/{nomCatalogue}/{auteur}/{type}/{categorie}")
@@ -159,7 +160,6 @@ public class webservice {
 
     /**
      * Supression d'une Entity de la base de donnée
-     *
      * @param uid : UID de la carte de l'entité
      */
 
@@ -202,7 +202,8 @@ public class webservice {
      * Modification de la table emprunt (ajout ou suppression) selon l'action réalisée
      *
      * @param  action : action = borrow ou return
-     * @param uidUser : uid = JSON avec uidUser et uidProduit
+     * @param uidUser : uid = JSON avec uidUser
+     * @param uidProduit : uid = JSON uidProduit
      */
 
     @Path("/manageBorrow/{action}/{uidUser}/{uidProduit}")

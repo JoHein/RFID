@@ -570,7 +570,4 @@ angular.module('RFID')
                     }
                 }
 
-                
-                
-
             }]);
