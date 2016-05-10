@@ -17,7 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class Database {
 
-    Statement stmt;
+    PreparedStatement stmt;
     Connection con;
 
     public Database() {
@@ -36,10 +36,9 @@ public class Database {
             e.printStackTrace();
         }
         //String url = "jdbc:mysql://localhost:3307/rfid";
-        String url = "jdbc:mysql://127.0.0.1:3307/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
-        this.stmt = con.createStatement();
     }
 
     /**
@@ -53,7 +52,10 @@ public class Database {
     public int isDispo(String uid) throws SQLException {
         int retour = -1;
         ResultSet rs;
-        rs = this.stmt.executeQuery("SELECT dispo FROM stock WHERE uidProduit = '" + uid + "'");
+        String sql = "SELECT dispo FROM stock WHERE uidProduit = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, uid);
+        rs = this.stmt.executeQuery();
         while (rs.next()) {
             retour = rs.getInt("dispo");
         }
@@ -77,13 +79,19 @@ public class Database {
         String sql = "";
         switch (table) {
             case "user":
-                rs = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + info + "'");
+                sql = "SELECT * FROM users WHERE uidUser = ?";
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, info);
+                rs = this.stmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
                 break;
             case "stock":
-                rs = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + info + "'");
+                sql = "SELECT * FROM stock WHERE uidProduit = ?";
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, info);
+                rs = this.stmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
@@ -94,18 +102,22 @@ public class Database {
                 else if (info.length() == 8) data = "uidProduit";
                 else break;
                 //System.out.println (data);
-                sql = "SELECT * FROM emprunt WHERE " + data + " = '" + info + "'";
-                System.out.println(sql);
-                rs = this.stmt.executeQuery(sql);
+
+                sql = "SELECT * FROM emprunt WHERE ? = ?";
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, data);
+                this.stmt.setString(2, info);
+                rs = this.stmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
                 System.out.println(retour);
                 break;
             case "empruntOeuvre":
-                sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = '" + info + "')";
-                System.out.println(sql);
-                rs = this.stmt.executeQuery(sql);
+                sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = ?)";
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, info);
+                rs = this.stmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
@@ -130,26 +142,42 @@ public class Database {
 
     public String manageBorrow(String action, String uidUser, String uidProduit) throws SQLException {
         if (uidUser.length() == 14 && uidProduit.length() == 8) {
+            String sql = "";
             int nbDispo = this.getNbDispo(uidProduit);
             int dispo = 0;
             if (action.equals("Emprunt")) {
                 if (this.isDispo(uidProduit) == 0) {
-                    //System.out.println(uidProduit + " non dispo");
                     return "[{\"retour\": \"Non Disponible\"}]";
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
-                this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
+                sql = "INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ( ? , ? , ?);
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, uidProduit);
+                this.stmt.setString(2, uidUser);
+                this.stmt.setString(3, date);
+                this.stmt.executeUpdate();
                 if (nbDispo > 0) nbDispo--;
             } else {
-                this.stmt.executeUpdate("DELETE FROM emprunt WHERE uidProduit = '" + uidProduit + "' AND uidUser = '" + uidUser + "'");
+                sql = "DELETE FROM emprunt WHERE uidProduit = ? AND uidUser = ?";
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, uidProduit);
+                this.stmt.setString(2, uidUser);
+                this.stmt.executeUpdate();
                 nbDispo++;
                 dispo = 1;
             }
-            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + " WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = '" + uidProduit + "')");
-            this.stmt.executeUpdate("UPDATE stock SET dispo = " + dispo + " WHERE uidProduit = '" + uidProduit + "'");
+            sql = "UPDATE catalogue SET nbDispo = ? WHERE idCatalogue = (SELECT idCatalogue FROM stock WHERE uidProduit = ? )";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, nbDispo);
+            this.stmt.setString(2, uidProduit);
+            this.stmt.executeUpdate();
+            sql = "UPDATE stock SET dispo = ? WHERE uidProduit = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, dispo);
+            this.stmt.setString(2, uidProduit);
+            this.stmt.executeUpdate();
             return "[{\"retour\": \"" + action + " OK\"}]";
-
         } else {
             return "[{\"retour\": \"Emprunt non ajouté car mauvaises cartes:\"" + uidUser.length() + "\" et produit \"" + uidProduit.length() + "\"}]";
 
@@ -167,13 +195,26 @@ public class Database {
 
     public String manageCatalogue(String action, Integer idCatalogue, String nomCatalogue, String auteur, String type, String categorie) throws SQLException {
         //System.out.println("action : " + action + " titre : " + nomCatalogue);
+        String sql = "";
         if (action.equals("Création")) {
-            this.stmt.executeUpdate("INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES ('" + nomCatalogue + "','" + auteur + "','0','0','" + type + "','" + categorie + "')");
+            sql = "INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES (?,?,0,0,?,?)";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, nomCatalogue);
+            this.stmt.setString(2, auteur);
+            this.stmt.setString(3, type);
+            this.stmt.setString(4, categorie);
+            this.stmt.executeUpdate();
         } else {
             if (this.isInDb("empruntOeuvre", Integer.toString(idCatalogue)) >= 1)
                 return "[{\"retour\": \"Oeuvre dans Emprunt\"}]";
-            this.stmt.executeUpdate("DELETE FROM stock WHERE idCatalogue = '" + idCatalogue + "'");
-            this.stmt.executeUpdate("DELETE FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
+            sql = "DELETE FROM stock WHERE idCatalogue = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, idCatalogue);
+            this.stmt.executeUpdate();
+            sql = "DELETE FROM catalogue WHERE idCatalogue = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, idCatalogue);
+            this.stmt.executeUpdate();
         }
         return "[{\"retour\":\"" + action + " Catalogue OK\"}]";
     }
@@ -190,12 +231,27 @@ public class Database {
      */
 
     public String addEntity(String type, String uid, String param1, String param2) throws SQLException {
+        String sql = "";
         if (type.equals("user")) {
-            this.stmt.executeUpdate("INSERT INTO users (nomUser,prenomUser,uidUser) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
+            sql = "INSERT INTO users (nomUser,prenomUser,uidUser) VALUES ( ? , ? , ? )";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, param1);
+            this.stmt.setString(2, param2);
+            this.stmt.setString(3, uid);
+            this.stmt.executeUpdate();
             return "[{\"retour\": \"Ajout Utilisateur OK\"}]";
         } else if (type.equals("product")) {
-            this.stmt.executeUpdate("INSERT INTO stock (idCatalogue,dispo,uidProduit) VALUES ('" + param1 + "','" + param2 + "','" + uid + "')");
-            ResultSet rs = this.stmt.executeQuery("SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = '" + param1 + "'");
+            sql = "INSERT INTO users (idCatalogue,dispo,uidProduit) VALUES ( ? , ? , ? )";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, param1);
+            this.stmt.setString(2, param2);
+            this.stmt.setString(3, uid);
+            this.stmt.executeUpdate();
+            sql = "SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, param1);
+            this.stmt.executeUpdate();
+            ResultSet rs = this.stmt.executeQuery();
             int nbTotal = 0;
             int nbDispo = 0;
             while (rs.next()) {
@@ -204,7 +260,12 @@ public class Database {
             }
             if (param2.equals("1")) nbDispo++;
             nbTotal++;
-            this.stmt.executeUpdate("UPDATE catalogue SET nbDispo = " + nbDispo + ", nbTotal = " + nbTotal + " WHERE idCatalogue LIKE " + param1);
+            sql = "UPDATE catalogue SET nbDispo = ? , nbTotal = ? WHERE idCatalogue LIKE ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, nbDispo);
+            this.stmt.setInt(2, nbTotal);
+            this.stmt.setString(3, param1);
+            this.stmt.executeUpdate();
             return "[{\"retour\": \"Ajout Produit OK\"}]";
         } else {
             return "[{\"retour\": \"Mauvais type\"}]";
@@ -222,11 +283,17 @@ public class Database {
     public int getNbDispo(String uid) throws SQLException {
         int idCatalogue = 0;
         int nbDispo = 0;
-        ResultSet rs = this.stmt.executeQuery("SELECT idCatalogue FROM stock WHERE uidProduit = '" + uid + "'");
+        sql = "SELECT idCatalogue FROM stock WHERE uidProduit = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, uid);
+        ResultSet rs = this.stmt.executeQuery();
         while (rs.next()) {
             idCatalogue = rs.getInt("idCatalogue");
         }
-        rs = this.stmt.executeQuery("SELECT nbDispo FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
+        sql = "SELECT nbDispo FROM catalogue WHERE idCatalogue = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setInt(1, idCatalogue);
+        rs = this.stmt.executeQuery();
         while (rs.next()) {
             nbDispo = rs.getInt("nbDispo");
         }
@@ -267,7 +334,6 @@ public class Database {
             //System.out.println(user.toString());
             data = user.toString();
             return data;
-
         } else {
             //System.out.println("Merci de passer une carte valide");
         }
@@ -286,7 +352,6 @@ public class Database {
         ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue");
         JSONArray listCat = new JSONArray();
         JSONObject resList = new JSONObject();
-
         while (allCat.next()) {
             JSONObject obj = new JSONObject();
             obj.put("idCatalogue", allCat.getInt("idCatalogue"));
@@ -321,7 +386,7 @@ public class Database {
         ResultSet allCatalogue;
         JSONArray listBorrow = new JSONArray();
         JSONObject resList = new JSONObject();
-
+        String sql = "";
         while (allBorrow.next()) {
             Emprunt emp = new Emprunt();
             emp.idEmprunt = allBorrow.getInt("idEmprunt");
@@ -334,15 +399,24 @@ public class Database {
             String etudiant = "";
             String oeuvre = "";
             int idCatalogue = 0;
-            allUser = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'");
+            sql = "SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'"
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, emp.uidUser);
+            allUser = this.stmt.executeQuery();
             while (allUser.next()) {
                 etudiant = allUser.getString("nomUser") + " " + allUser.getString("prenomUser");
             }
-            allProduit = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit LIKE '" + emp.uidProduit + "'");
+            sql = "SELECT * FROM stock WHERE uidProduit LIKE ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, emp.uidProduit);
+            allProduit = this.stmt.executeQuery();
             while (allProduit.next()) {
                 idCatalogue = allProduit.getInt("idCatalogue");
             }
-            allCatalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue LIKE '" + idCatalogue + "'");
+            sql = "SELECT * FROM catalogue WHERE idCatalogue LIKE ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, idCatalogue);
+            allCatalogue = this.stmt.executeQuery();
             while (allCatalogue.next()) {
                 oeuvre = allCatalogue.getString("nomCatalogue");
             }
@@ -386,7 +460,10 @@ public class Database {
 
         for (User usr : users) {
             int nbEmp = 0;
-            nbEmprunt = this.stmt.executeQuery("SELECT * FROM emprunt WHERE uidUser LIKE '" + usr.uidUser + "'");
+            String sql = "SELECT * FROM emprunt WHERE uidUser LIKE ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, usr.uidUser);
+            nbEmprunt = this.stmt.executeQuery();
             while (nbEmprunt.next()) {
                 nbEmp++;
             }
@@ -415,7 +492,10 @@ public class Database {
      */
 
     public JSONObject getBookByTitle(String search) throws SQLException, JSONException {
-        ResultSet allCat = this.stmt.executeQuery("SELECT * FROM catalogue where nomCatalogue like '%" + search + "%'");
+        String sql = "SELECT * FROM catalogue WHERE nomCatalogue LIKE %?%";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, search);
+        ResultSet allCat = this.stmt.executeQuery();
         JSONArray listCat = new JSONArray();
         JSONObject resList = new JSONObject();
 
@@ -444,7 +524,10 @@ public class Database {
      * @throws SQLException
      */
     public Produit getProduitStock(String uid) throws SQLException {
-        ResultSet stock = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
+        String sql = "SELECT * FROM stock WHERE uidProduit = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, uid);
+        ResultSet stock = this.stmt.executeQuery();
         Produit prod = new Produit();
         while (stock.next()) {
             prod.idStock = stock.getInt("idStock");
@@ -453,8 +536,10 @@ public class Database {
             prod.idCatalogue = stock.getInt("idCatalogue");
 
         }
-
-        ResultSet catalogue = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue = '" + prod.idCatalogue + "'");
+        sql = "SELECT * FROM catalogue WHERE idCatalogue = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setInt(1, prod.idCatalogue);
+        ResultSet catalogue = this.stmt.executeQuery();
         while (catalogue.next()) {
             prod.nomCatalogue = catalogue.getString("nomCatalogue");
         }
@@ -470,9 +555,11 @@ public class Database {
      */
 
     public User getProduitUser(String uid) throws SQLException {
-        ResultSet users = this.stmt.executeQuery("SELECT * FROM users WHERE uidUser = '" + uid + "'");
+        String sql = "SELECT * FROM users WHERE uidUser = ?";
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, uid);
+        ResultSet users = this.stmt.executeQuery();
         User user = new User();
-
         while (users.next()) {
             user.idUser = users.getInt("idUser");
             user.nomUser = users.getString("nomUser");
@@ -494,19 +581,31 @@ public class Database {
         int idCatalogue = 0;
         int nbTotal = 0;
         int nbDispo = 0;
+        String sql = "";
         if (uid.length() == 14) {
-            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Utilisateur dans Emprunt\"}]";
+            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Utilisateur  dans Emprunt\"}]";
             if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"Utilisateur supprimé\"}]";
-            this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
-            return "[{\"retour\": \"Suppression utilisateur OK\"}]";
+            sql = "DELETE FROM users WHERE uidUser = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, uid);
+            this.stmt.executeUpdate();
+            return "[{\"retour\": \"Utilisateur supprimé\"}]";
         } else if (uid.length() == 8) {
             if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
             if (this.isInDb("produit", uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
-            ResultSet produits = this.stmt.executeQuery("SELECT * FROM stock WHERE uidProduit = '" + uid + "'");
+
+            sql = "SELECT * FROM stock WHERE uidProduit = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, uid);
+            ResultSet produits = this.stmt.executeQuery();
             while (produits.next()) {
                 idCatalogue = produits.getInt("idCatalogue");
             }
-            ResultSet catalogues = this.stmt.executeQuery("SELECT * FROM catalogue WHERE idCatalogue = '" + idCatalogue + "'");
+
+            sql = "SELECT * FROM catalogue WHERE idCatalogue = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, idCatalogue);
+            ResultSet catalogues = this.stmt.executeQuery();
             while (catalogues.next()) {
                 nbTotal = catalogues.getInt("nbTotal");
                 nbDispo = catalogues.getInt("nbDispo");
@@ -516,9 +615,16 @@ public class Database {
             if (nbDispo > 0) {
                 nbDispo--;
             }
-            String nbDispoS = ", nbdispo = " + nbDispo;
-            this.stmt.executeUpdate("UPDATE catalogue SET nbTotal = " + nbTotal + " " + nbDispoS + " WHERE idCatalogue = '" + idCatalogue + "'");
-            this.stmt.executeUpdate("DELETE FROM stock WHERE uidProduit = '" + uid + "'");
+            sql = "UPDATE catalogue SET nbTotal = ? , nbDispo = ? WHERE idCatalogue = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setInt(1, nbTotal);
+            this.stmt.setInt(2, nbDispo);
+            this.stmt.setInt(3, idCatalogue);
+            this.stmt.executeUpdate();
+            sql = "DELETE FROM stock WHERE uidProduit = ?";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, uid);
+            this.stmt.executeUpdate();
             return "[{\"retour\": \"Suppression livre OK\"}]";
         }
         return "[{\"retour\": \"Suppression \"}]";
