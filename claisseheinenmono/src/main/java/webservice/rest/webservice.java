@@ -129,7 +129,7 @@ public class webservice {
     public JSONObject findByTitle(@QueryParam("search") String search) throws JSONException, SQLException {
         Database data = new Database();
         data.prepareToQuery();
-        System.out.println("Dans le servicce avec " + search);
+        System.out.println("Trouver le livre : " + search);
         return data.getBookByTitle(search);
     }
 
