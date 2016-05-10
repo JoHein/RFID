@@ -2,6 +2,7 @@ package RFID.projetRFID;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -36,7 +37,7 @@ public class Database {
             e.printStackTrace();
         }
         //String url = "jdbc:mysql://localhost:3307/rfid";
-        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3307/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
     }
@@ -151,7 +152,7 @@ public class Database {
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
-                sql = "INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ( ? , ? , ?);
+                sql = "INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ( ? , ? , ?)";
                 this.stmt = con.prepareStatement(sql);
                 this.stmt.setString(1, uidProduit);
                 this.stmt.setString(2, uidUser);
@@ -283,7 +284,7 @@ public class Database {
     public int getNbDispo(String uid) throws SQLException {
         int idCatalogue = 0;
         int nbDispo = 0;
-        sql = "SELECT idCatalogue FROM stock WHERE uidProduit = ?";
+        String sql = "SELECT idCatalogue FROM stock WHERE uidProduit = ?";
         this.stmt = con.prepareStatement(sql);
         this.stmt.setString(1, uid);
         ResultSet rs = this.stmt.executeQuery();
@@ -399,7 +400,7 @@ public class Database {
             String etudiant = "";
             String oeuvre = "";
             int idCatalogue = 0;
-            sql = "SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'"
+            sql = "SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'";
             this.stmt = con.prepareStatement(sql);
             this.stmt.setString(1, emp.uidUser);
             allUser = this.stmt.executeQuery();
