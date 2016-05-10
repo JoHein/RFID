@@ -4,6 +4,7 @@
 body{
 	padding-left:2em;
 	padding-right:2em;
+	max-width:107em;
 }
 
 .menuLeft{
@@ -60,3 +61,6 @@ hr{
  	 border-top: 1px solid #d9d9d9;
 }
 
+h3:hover{
+	cursor: pointer;
+}
