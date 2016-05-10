@@ -583,13 +583,13 @@ public class Database {
         int nbDispo = 0;
         String sql = "";
         if (uid.length() == 14) {
-            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"User dans Emprunt\"}]";
-            if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"User pas dans la database\"}]";
+            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Utilisateur  dans Emprunt\"}]";
+            if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"Utilisateur supprimé\"}]";
             sql = "DELETE FROM users WHERE uidUser = ?";
             this.stmt = con.prepareStatement(sql);
             this.stmt.setString(1, uid);
             this.stmt.executeUpdate();
-            return "[{\"retour\": \"Suppression utilisateur OK\"}]";
+            return "[{\"retour\": \"Utilisateur supprimé\"}]";
         } else if (uid.length() == 8) {
             if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
             if (this.isInDb("produit", uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
