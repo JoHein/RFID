@@ -7,7 +7,8 @@ angular.module('RFID')
                 var vm = this;
                 
                 /****Affichage lancement**************************************************************************************************************************/
-
+                
+                vm.affichage="Message de la console";
 
                 $http.get('/rest/allBorrow')
                     .then(function (data) {
@@ -112,7 +113,7 @@ angular.module('RFID')
 
 
                 $scope.deleteEntUser = function () {
-                    vm.affichage = "Suppression : Présentez une carte User";
+                    vm.affichage = "Suppression : Présentez une carte Utilisateur";
                     ScanCard(function (value) {
 
                         $log.debug("Dans rest");
@@ -134,7 +135,7 @@ angular.module('RFID')
 
                                         vm.deleteEnt = response.data[0].retour;
 
-                                        vm.affichage = vm.deleteEnt + "\n User : " + value.nomUser + " " + value.prenomUser;
+                                        vm.affichage = vm.deleteEnt + "\n Utilisateur : " + value.nomUser + " " + value.prenomUser;
                                         
                                         updateList();
                                     })
@@ -283,7 +284,7 @@ angular.module('RFID')
                             $log.debug(response.data[0]);
 
                             vm.UserInfo = response.data[0];
-                            var nextEpisode = $window.confirm("Emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
+                            var nextEpisode = $window.confirm("Emprunt pour Utilisateur : " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
 
 
                             if (nextEpisode) {
@@ -296,7 +297,7 @@ angular.module('RFID')
 
                                         vm.cardProd = response2.data[0];
 
-                                        var nextFinalEpisode = $window.confirm("Validez emprunt pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
+                                        var nextFinalEpisode = $window.confirm("Validez emprunt pour Utilisateur : " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
                                         if (nextFinalEpisode) {
                                             $http.post('/rest/manageBorrow/Emprunt/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
 
@@ -333,7 +334,7 @@ angular.module('RFID')
                             $log.debug(response.data[0]);
 
                             vm.UserInfo = response.data[0];
-                            var nextEpisode = $window.confirm("Retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
+                            var nextEpisode = $window.confirm("Retour pour Utilisateur : " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + " ?");
 
 
                             if (nextEpisode) {
@@ -346,7 +347,7 @@ angular.module('RFID')
 
                                         vm.cardProd = response2.data[0];
 
-                                        var nextFinalEpisode = $window.confirm("Validez retour pour User: " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
+                                        var nextFinalEpisode = $window.confirm("Validez retour pour Utilisateur : " + vm.UserInfo.nomUser + " " + vm.UserInfo.prenomUser + "\n Livre: " + vm.cardProd.nomCatalogue + " ?");
                                         if (nextFinalEpisode) {
                                             $http.post('/rest/manageBorrow/Retour/' + vm.UserInfo.uidUser + '/' + vm.cardProd.uidProduit)
 
@@ -413,8 +414,13 @@ angular.module('RFID')
                             .then(function (response) {
                                 $log.debug("la reponse deleteOeuvre");
                                 $log.debug(response);
-                                vm.affichage = "Suppresion Oeuvre : " + data.nomCatalogue + " " +
-                                    "" + response.data[0].retour;
+                                
+
+                                vm.deleteOeuvre = response.data[0].retour;
+
+                                vm.affichage = vm.deleteOeuvre + '\r\n Nom Oeuvre: ' + data.nomCatalogue;
+                                
+                                
 
                                 /*
                                  * Suppresion dans vm.oeuvre l'array affiché de l'oeuvre

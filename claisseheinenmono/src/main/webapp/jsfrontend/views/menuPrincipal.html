@@ -14,12 +14,14 @@
 <section class="menuLeft">
 	<div class="affichage">
 		<h1 class="display">{{menuController.affichage}}</h1>
+        <h1 data-ng-if></h1>
 	</div>
 
 <div class="listeEmprunt">
-		<h3 data-ng-click="isCollapsed = !isCollapsed" ><span class="glyphicon glyphicon-share glyphicon glyphicon-book"></span> Liste des Emprunts 
-		<span  class="glyphicon" data-ng-class="{'glyphicon glyphicon-chevron-down':isCollapsed, 'glyphicon glyphicon-chevron-right':!isCollapsed}"></span></h3>
-		<table collapse="!isCollapsed" class="table table-striped">
+		<h3 data-ng-click="isCollapsed1 = !isCollapsed1" ><span class="glyphicon glyphicon-share glyphicon glyphicon-book"></span> Liste des Emprunts 
+		<span  class="glyphicon" data-ng-class="{'glyphicon glyphicon-chevron-down':isCollapsed1, 'glyphicon glyphicon-chevron-right':!isCollapsed1}"></span>
+		</h3>
+		<table data-ng-show="isCollapsed1" class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
@@ -36,13 +38,14 @@
 				</tr>
 			</tbody>
 		</table>
+		<hr>
 	</div>
 
 	<div class="listeOeuvre">
-		<h3 data-ng-click="isCollapsed = !isCollapsed"><span class="glyphicon glyphicon-book"></span> Liste des Oeuvres 
-		<span  class="glyphicon" data-ng-class="{'icon-af icon-af-A-basic-chevron-down':isCollapsed, 'icon-af icon-af-A-basic-chevron-right':!isCollapsed}"></span>
+		<h3 data-ng-click="isCollapsed2 = !isCollapsed2"><span class="glyphicon glyphicon-book"></span> Liste des Oeuvres 
+		<span  class="glyphicon" data-ng-class="{'glyphicon glyphicon-chevron-down':isCollapsed2, 'glyphicon glyphicon-chevron-right':!isCollapsed2}"></span>
 		</h3>
-		<table data-ng-show="isCollapsed" class="table table-striped">
+		<table data-ng-show="isCollapsed2" class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
@@ -64,11 +67,15 @@
 				</tr>
 			</tbody>
 		</table>
+				<hr>
+		
 	</div>
 
 <div class="listeEtudiant">
-		<h3><span class="glyphicon glyphicon-user"></span> Liste des Etudiants</h3>
-		<table class="table table-striped">
+		<h3 data-ng-click="isCollapsed3 = !isCollapsed3" ><span class="glyphicon glyphicon-user"></span> Liste des Etudiants
+			<span  class="glyphicon" data-ng-class="{'glyphicon glyphicon-chevron-down':isCollapsed3, 'glyphicon glyphicon-chevron-right':!isCollapsed3}"></span>
+		</h3>
+		<table data-ng-show="isCollapsed3" class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
@@ -84,6 +91,8 @@
 				</tr>
 			</tbody>
 		</table>
+				<hr>
+		
 	</div>
 
 </section>
