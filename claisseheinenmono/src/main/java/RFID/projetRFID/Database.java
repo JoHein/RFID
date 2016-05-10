@@ -495,7 +495,7 @@ public class Database {
      */
 
     public JSONObject getBookByTitle(String search) throws SQLException, JSONException {
-        String sql = "SELECT * FROM catalogue WHERE nomCatalogue LIKE %?%";
+        String sql = "SELECT * FROM catalogue WHERE nomCatalogue LIKE \"%?%\"";
         this.preparedStmt = con.prepareStatement(sql);
         this.preparedStmt.setString(1, search);
         ResultSet allCat = this.preparedStmt.executeQuery();
