@@ -14,7 +14,7 @@ body{
 .affichage{
 	background:grey;
 	width:90%;
-	height:15em;
+	height:12em;
 	border: 1px solid black;
 }
 
@@ -46,9 +46,12 @@ body{
 
 .display{
 	color:white;
-	padding-top:3em;
+	padding-top:2em;
 	font-size: 2em;
 	text-align: center;
+	margin-left:1.5em;
+		margin-right:1.5em;
+	
 }
 
 hr{

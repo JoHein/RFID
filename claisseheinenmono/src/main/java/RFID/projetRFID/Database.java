@@ -38,7 +38,7 @@ public class Database {
             e.printStackTrace();
         }
         //String url = "jdbc:mysql://localhost:3307/rfid";
-        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3307/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
         this.stmt = con.createStatement();
@@ -155,11 +155,19 @@ public class Database {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
                 sql = "INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ( ? , ? , ?)";
+<<<<<<< HEAD
+                this.stmt = con.prepareStatement(sql);
+                this.stmt.setString(1, uidProduit);
+                this.stmt.setString(2, uidUser);
+                this.stmt.setString(3, date);
+                this.stmt.executeUpdate();
+=======
                 this.preparedStmt = con.prepareStatement(sql);
                 this.preparedStmt.setString(1, uidProduit);
                 this.preparedStmt.setString(2, uidUser);
                 this.preparedStmt.setString(3, date);
                 this.preparedStmt.executeUpdate();
+>>>>>>> master
                 if (nbDispo > 0) nbDispo--;
             } else {
                 sql = "DELETE FROM emprunt WHERE uidProduit = ? AND uidUser = ?";
@@ -287,9 +295,15 @@ public class Database {
         int idCatalogue = 0;
         int nbDispo = 0;
         String sql = "SELECT idCatalogue FROM stock WHERE uidProduit = ?";
+<<<<<<< HEAD
+        this.stmt = con.prepareStatement(sql);
+        this.stmt.setString(1, uid);
+        ResultSet rs = this.stmt.executeQuery();
+=======
         this.preparedStmt = con.prepareStatement(sql);
         this.preparedStmt.setString(1, uid);
         ResultSet rs = this.preparedStmt.executeQuery();
+>>>>>>> master
         while (rs.next()) {
             idCatalogue = rs.getInt("idCatalogue");
         }
@@ -402,10 +416,17 @@ public class Database {
             String etudiant = "";
             String oeuvre = "";
             int idCatalogue = 0;
+<<<<<<< HEAD
+            sql = "SELECT * FROM users WHERE uidUser LIKE '" + emp.uidUser + "'";
+            this.stmt = con.prepareStatement(sql);
+            this.stmt.setString(1, emp.uidUser);
+            allUser = this.stmt.executeQuery();
+=======
             sql = "SELECT * FROM users WHERE uidUser LIKE ?";
             this.preparedStmt = con.prepareStatement(sql);
             this.preparedStmt.setString(1, emp.uidUser);
             allUser = this.preparedStmt.executeQuery();
+>>>>>>> master
             while (allUser.next()) {
                 etudiant = allUser.getString("nomUser") + " " + allUser.getString("prenomUser");
             }
