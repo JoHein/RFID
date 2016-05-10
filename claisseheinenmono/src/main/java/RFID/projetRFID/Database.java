@@ -103,7 +103,7 @@ public class Database {
                 System.out.println(retour);
                 break;
             case "empruntOeuvre":
-                sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = '"+info+"')";
+                sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = '" + info + "')";
                 System.out.println(sql);
                 rs = this.stmt.executeQuery(sql);
                 rs.last();
@@ -139,7 +139,6 @@ public class Database {
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String date = sdf.format(new Date());
-                //System.out.println("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 this.stmt.executeUpdate("INSERT INTO emprunt (uidProduit,uidUser,dateEmprunt) VALUES ('" + uidProduit + "','" + uidUser + "','" + date + "')");
                 if (nbDispo > 0) nbDispo--;
             } else {
