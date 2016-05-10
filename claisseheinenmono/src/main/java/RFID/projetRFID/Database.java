@@ -36,7 +36,7 @@ public class Database {
             e.printStackTrace();
         }
         //String url = "jdbc:mysql://localhost:3307/rfid";
-        String url = "jdbc:mysql://127.0.0.1:3306/rfid";
+        String url = "jdbc:mysql://127.0.0.1:3307/rfid";
 
         this.con = DriverManager.getConnection(url, "root", "");
         this.stmt = con.createStatement();
@@ -495,8 +495,8 @@ public class Database {
         int nbTotal = 0;
         int nbDispo = 0;
         if (uid.length() == 14) {
-            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"User dans Emprunt\"}]";
-            if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"User pas dans la database\"}]";
+            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Utilisateur dans Emprunt\"}]";
+            if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"Utilisateur supprimé\"}]";
             this.stmt.executeUpdate("DELETE FROM users WHERE uidUser = '" + uid + "'");
             return "[{\"retour\": \"Suppression utilisateur OK\"}]";
         } else if (uid.length() == 8) {

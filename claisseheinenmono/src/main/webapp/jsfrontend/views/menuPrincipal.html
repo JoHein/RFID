@@ -17,8 +17,9 @@
 	</div>
 
 <div class="listeEmprunt">
-		<h3><span class="glyphicon glyphicon-share glyphicon glyphicon-book"></span> Liste des Emprunts</h3>
-		<table class="table table-striped">
+		<h3 data-ng-click="isCollapsed = !isCollapsed" ><span class="glyphicon glyphicon-share glyphicon glyphicon-book"></span> Liste des Emprunts 
+		<span  class="glyphicon" data-ng-class="{'glyphicon glyphicon-chevron-down':isCollapsed, 'glyphicon glyphicon-chevron-right':!isCollapsed}"></span></h3>
+		<table collapse="!isCollapsed" class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
@@ -38,8 +39,10 @@
 	</div>
 
 	<div class="listeOeuvre">
-		<h3><span class="glyphicon glyphicon-book"></span> Liste des Oeuvres</h3>
-		<table class="table table-striped">
+		<h3 data-ng-click="isCollapsed = !isCollapsed"><span class="glyphicon glyphicon-book"></span> Liste des Oeuvres 
+		<span  class="glyphicon" data-ng-class="{'icon-af icon-af-A-basic-chevron-down':isCollapsed, 'icon-af icon-af-A-basic-chevron-right':!isCollapsed}"></span>
+		</h3>
+		<table data-ng-show="isCollapsed" class="table table-striped">
 			<tbody>
 			<thead>
 				<tr>
