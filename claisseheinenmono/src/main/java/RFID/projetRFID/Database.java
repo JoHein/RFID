@@ -80,6 +80,7 @@ public class Database {
         int retour = -1;
         ResultSet rs;
         String sql = "";
+
         switch (table) {
             case "user":
                 sql = "SELECT * FROM users WHERE uidUser = ?";
@@ -88,6 +89,7 @@ public class Database {
                 rs = this.preparedStmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
+
                 rs.beforeFirst();
                 break;
             case "stock":
@@ -97,24 +99,23 @@ public class Database {
                 rs = this.preparedStmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
+
                 rs.beforeFirst();
                 break;
             case "emprunt":
+
                 String data = "";
                 if (info.length() == 14) data = "uidUser";
                 else if (info.length() == 8) data = "uidProduit";
                 else break;
-                //System.out.println (data);
 
-                sql = "SELECT * FROM emprunt WHERE ? = ?";
+                sql = "SELECT * FROM emprunt WHERE "+data+" = ?";
                 this.preparedStmt = con.prepareStatement(sql);
-                this.preparedStmt.setString(1, data);
-                this.preparedStmt.setString(2, info);
+                this.preparedStmt.setString(1, info);
                 rs = this.preparedStmt.executeQuery();
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
-                System.out.println(retour);
                 break;
             case "empruntOeuvre":
                 sql = "SELECT * FROM emprunt WHERE uidProduit IN (SELECT uidProduit FROM stock WHERE idCatalogue = ?)";
@@ -124,7 +125,6 @@ public class Database {
                 rs.last();
                 retour = rs.getRow();
                 rs.beforeFirst();
-                System.out.println(retour);
                 break;
             default:
                 retour = -1;
@@ -198,7 +198,6 @@ public class Database {
      */
 
     public String manageCatalogue(String action, Integer idCatalogue, String nomCatalogue, String auteur, String type, String categorie) throws SQLException {
-        //System.out.println("action : " + action + " titre : " + nomCatalogue);
         String sql = "";
         if (action.equals("Création")) {
             sql = "INSERT INTO catalogue (nomCatalogue,auteur,nbDispo,nbTotal,type,categorie) VALUES (?,?,0,0,?,?)";
@@ -245,7 +244,7 @@ public class Database {
             this.preparedStmt.executeUpdate();
             return "[{\"retour\": \"Ajout Utilisateur OK\"}]";
         } else if (type.equals("product")) {
-            sql = "INSERT INTO users (idCatalogue,dispo,uidProduit) VALUES ( ? , ? , ? )";
+            sql = "INSERT INTO stock (idCatalogue,dispo,uidProduit) VALUES ( ? , ? , ? )";
             this.preparedStmt = con.prepareStatement(sql);
             this.preparedStmt.setString(1, param1);
             this.preparedStmt.setString(2, param2);
@@ -254,7 +253,6 @@ public class Database {
             sql = "SELECT nbTotal,nbDispo FROM catalogue WHERE idCatalogue = ?";
             this.preparedStmt = con.prepareStatement(sql);
             this.preparedStmt.setString(1, param1);
-            this.preparedStmt.executeUpdate();
             ResultSet rs = this.preparedStmt.executeQuery();
             int nbTotal = 0;
             int nbDispo = 0;
@@ -589,6 +587,7 @@ public class Database {
         int nbDispo = 0;
         String sql = "";
         if (uid.length() == 14) {
+
             if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Utilisateur  dans Emprunt\"}]";
             if (this.isInDb("user", uid) == 0) return "[{\"retour\": \"Utilisateur supprimé\"}]";
             sql = "DELETE FROM users WHERE uidUser = ?";
@@ -597,9 +596,13 @@ public class Database {
             this.preparedStmt.executeUpdate();
             return "[{\"retour\": \"Utilisateur supprimé\"}]";
         } else if (uid.length() == 8) {
-            if (this.isInDb("emprunt", uid) >= 1) return "[{\"retour\": \"Livre dans Emprunt\"}]";
-            if (this.isInDb("produit", uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
 
+            if (this.isInDb("emprunt", uid) >= 1){
+            	return "[{\"retour\": \"Livre dans Emprunt\"}]";
+            }
+          
+
+            if (this.isInDb("produit", uid) == 0) return "[{\"retour\": \"Livre pas dans la database\"}]";
             sql = "SELECT * FROM stock WHERE uidProduit = ?";
             this.preparedStmt = con.prepareStatement(sql);
             this.preparedStmt.setString(1, uid);
